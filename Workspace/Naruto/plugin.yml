@@ -1,0 +1,9 @@
+version: 1.0
+name: Naruto
+main: de.luke.naruto.Main
+author: Vator
+description: Demo Plugin
+commands:
+  menu:
+    aliases: [hi]
+    description: Menu command
