@@ -2,8 +2,6 @@ package de.luke.naruto.constantData.Items;
 
 import org.bukkit.Material;
 
-import de.luke.naruto.enums.ItemId;
-
 
 public class MaterialInfo {
 

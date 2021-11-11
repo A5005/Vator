@@ -1,13 +1,9 @@
 package de.luke.naruto;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import de.luke.naruto.constantData.Collections.CollectionInitializer;
-import net.md_5.bungee.api.ChatColor;
+
 
 //API
 //https://hub.spigotmc.org/javadocs/spigot/
@@ -20,7 +16,11 @@ public class Main extends JavaPlugin {
 		
 		System.out.println("##########  Plugin Naruto was loaded");
 		
-		CollectionInitializer.InitializeCollections();
+		try {
+			CollectionInitializer.InitializeCollections();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
 		

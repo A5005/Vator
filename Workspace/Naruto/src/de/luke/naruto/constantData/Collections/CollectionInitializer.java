@@ -8,6 +8,7 @@ public class CollectionInitializer {
 	{
 		
 		//Don't change the order
+		MaterialInfos.Create();
 		MaterialIcons.Create();
 		WeaponIcons.Create();
 		

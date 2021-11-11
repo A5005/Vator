@@ -8,57 +8,64 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-
+import de.luke.naruto.Perspectives.CraftingPerspective;
+import de.luke.naruto.Perspectives.MainPerspective;
+import de.luke.naruto.constantData.Ids.PerspectiveIds;
+import de.luke.naruto.tools.ItemMetadata;
 
 public class InventoryListener implements Listener {
 
 	@EventHandler
 	public static void handleNavigatorGUIClickTop(InventoryClickEvent event) {
 
-		System.out.println("Before Metadata 1");
+		event.setCancelled(true);
+
+		ItemStack selectedItemStack = TryGetValidItemStack(event);
+		if (selectedItemStack == null)
+			return;
+
+		if (!ItemMetadata.hasMetadata(selectedItemStack, "P"))
+			return;
+
+		int perspectiveId = (int) ItemMetadata.getMetadata(selectedItemStack, "P");
+
+		switch (perspectiveId) {
+
+		case PerspectiveIds.MainPerspoective:
+			Inventory clickedInventory = event.getClickedInventory();
+			MainPerspective.ProcessSelectedItem(selectedItemStack,clickedInventory);
+			break;
+
+		case PerspectiveIds.CraftingtPerspective:
+			CraftingPerspective.ProcessSelectedItem(selectedItemStack);
+			break;
+
+		default:
+			return;
+
+		}
+
+	}
+
+	private static ItemStack TryGetValidItemStack(InventoryClickEvent event) {
 		HumanEntity humanEntity = event.getWhoClicked();
 
-		System.out.println("Before Metadata 2");
 		if (!(humanEntity instanceof Player))
-			return;
+			return null;
 
-		System.out.println("Before Metadata 3");
-		Player player = (Player) humanEntity;
-
-		System.out.println("Before Metadata 4");
 		Inventory clickedInventory = event.getClickedInventory();
 
-		System.out.println("Before Metadata 5");
 		if (clickedInventory == null)
-			return;
+			return null;
 
-		System.out.println("Before Metadata 6");
-		ItemStack currentIemStack = event.getCurrentItem();
+		ItemStack currentItemStack = event.getCurrentItem();
+		if (currentItemStack == null)
+			return null;
 
-		System.out.println("Before Metadata 7");
-		if (currentIemStack == null)
-			return;
-		
-		String kenner="SomeInt";
+		if (!currentItemStack.hasItemMeta())
+			return null;
 
-		System.out.println("Before Metadata 8");
-		if (!currentIemStack.hasItemMeta())
-			return;
-		else {
-			currentIemStack = ItemMetadata.setMetadata(currentIemStack, kenner, 4711);
-			System.out.println("Write Meta");
-		}
-
-		System.out.println("Before Metadata 90");
-
-		if (ItemMetadata.hasMetadata(currentIemStack, kenner)) {
-			int myMetaData = (int) ItemMetadata.getMetadata(currentIemStack, kenner);
-			System.out.println(myMetaData);
-		} else {
-			System.out.println("No Metadata");
-		}
-
-		System.out.println("Before Metadata 10");
+		return currentItemStack;
 
 	}
 
