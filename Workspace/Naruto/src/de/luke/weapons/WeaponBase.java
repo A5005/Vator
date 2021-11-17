@@ -1,21 +1,15 @@
 package de.luke.weapons;
 
+import de.luke.config.ConfigManager;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
-
-import de.luke.config.ConfigManager;
-import de.luke.naruto.tools.PrintHelp;
-import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
 
 public abstract class WeaponBase {
 
@@ -25,14 +19,9 @@ public abstract class WeaponBase {
 
 	public WeaponBase() {
 
-		speed = 16;
-		range = 32;
-		fillCount = 1;
 	}
 
-	protected String getFileName() {
-		return "weaponbase.yml";
-	}
+	protected abstract String getFileName();
 
 	public void execute(Boolean loadParamsFromConfig, Player player, Plugin plugin) {
 		if (loadParamsFromConfig) {
@@ -40,7 +29,7 @@ public abstract class WeaponBase {
 			LoadParamsFromConfig(customConfig);
 		}
 
-		PrintHelp.PrintDouble("Range", range);
+		// PrintHelp.PrintDouble("Range", range);
 
 		Location eyeLocation = player.getEyeLocation();
 		Location groundLocation = player.getLocation();
@@ -57,47 +46,20 @@ public abstract class WeaponBase {
 
 		Vector projectileVector = fromGroundToEyeHalf.clone().add(targetVector);
 		double projectileVectorlength = projectileVector.length();
-		PrintHelp.PrintDouble("projectileVectorlength", projectileVectorlength);
+
+		// PrintHelp.PrintDouble("projectileVectorlength", projectileVectorlength);
 		Vector projectileVectorDir = projectileVector.clone().normalize();
 
-		double particleCount = range / speed * 20;
-		Vector vecOffset = projectileVectorDir.clone().multiply(range / (particleCount * fillCount));
+		double particleCount = (range / speed * 20) * fillCount;
+		Vector vecOffset = projectileVectorDir.clone().multiply(range / particleCount);
 		double offsetLength = vecOffset.length();
 		Location curLocation = midLocation.clone();
 
-		CreateParticles(player, plugin, projectileVectorlength, vecOffset, offsetLength, curLocation);
+		CreateParticles(player, plugin, projectileVectorlength, vecOffset, offsetLength, curLocation, particleCount);
 
 	}
 
-	private void CreateParticles(Player player, Plugin plugin, double projectileVectorlength, Vector vecOffset, double offsetLength, Location curLocation) {
-		new BukkitRunnable() {
-
-			double curLength = 0;
-			PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
-
-			public void run() {
-
-				for (int i = 0; i < fillCount; i++) {
-
-					PrintHelp.PrintDouble("length", curLength);
-
-					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (curLocation.getX()), (float) (curLocation.getY()), (float) (curLocation.getZ()), 0, 0, 0, 0, 1);
-					playerConnection.sendPacket(packet);
-
-					curLength += offsetLength;
-
-					if (curLength > projectileVectorlength) {
-
-						this.cancel();
-						return;
-					}
-
-					curLocation.add(vecOffset);
-				}
-
-			}
-		}.runTaskTimer(plugin, 0, 1);
-	}
+	protected abstract void CreateParticles(Player player, Plugin plugin, double projectileVectorlength, Vector vecOffset, double offsetLength, Location curLocation, double particleCount);
 
 	private Block getTargetBlock(Player player, int range) {
 		BlockIterator iter = new BlockIterator(player, range);
@@ -110,6 +72,23 @@ public abstract class WeaponBase {
 			break;
 		}
 		return lastBlock;
+	}
+
+	protected Vector Rotate(Vector toRotate, Vector around, double angle) {
+		if (angle == 0)
+			return toRotate;
+
+		double vx = around.getX(), vy = around.getY(), vz = around.getZ();
+		double x = toRotate.getX(), y = toRotate.getY(), z = toRotate.getZ();
+		double sinA = Math.sin(angle), cosA = Math.cos(angle);
+
+		double x1 = x * (vx * vx * (1 - cosA) + cosA) + y * (vx * vy * (1 - cosA) - vz * sinA) + z * (vx * vz * (1 - cosA) + vy * sinA);
+		double y1 = x * (vy * vx * (1 - cosA) + vz * sinA) + y * (vy * vy * (1 - cosA) + cosA) + z * (vy * vz * (1 - cosA) - vx * sinA);
+		double z1 = x * (vz * vx * (1 - cosA) - vy * sinA) + y * (vz * vy * (1 - cosA) + vx * sinA) + z * (vz * vz * (1 - cosA) + cosA);
+
+		Vector result = new Vector(x1, y1, z1);
+		return result.normalize();
+
 	}
 
 	protected void LoadParamsFromConfig(YamlConfiguration yamlConfiguration) {

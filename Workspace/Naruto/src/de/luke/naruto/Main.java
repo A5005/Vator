@@ -34,7 +34,6 @@ public class Main extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new AttackListener(this), this);
 		
 
-		getCommand("fire2").setExecutor(new FireCommand());
 		getCommand("menu").setExecutor(new GuiCommands());
 
 		

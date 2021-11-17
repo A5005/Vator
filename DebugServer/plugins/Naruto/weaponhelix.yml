@@ -1,0 +1,6 @@
+speed: 30
+range: 10
+fillcount: 10
+startradius: 1
+endradius: 0.2
+blockspercycle : 2

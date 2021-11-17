@@ -1,30 +1,66 @@
 package de.luke.weapons;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
 
 public class WeaponLinear extends WeaponBase {
 
 	public WeaponLinear() {
 
+		speed = 16;
+		range = 32;
+		fillCount = 1;
+
 	}
-	
+
 	@Override
 	protected String getFileName() {
-		return "customConfig.yml";
+		return "weaponlinear.yml";
 	}
 
 	@Override
-	public  void execute(Boolean loadParamsFromConfig, Player player, Plugin plugin) {
-		super.execute(loadParamsFromConfig, player, plugin);
+	protected void CreateParticles(Player player, Plugin plugin, double projectileVectorlength, Vector vecOffset, double offsetLength, Location curLocation, double particleCount) {
+		new BukkitRunnable() {
 
+			double curLength = 0;
+			PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+			public void run() {
+
+				for (int i = 0; i < fillCount; i++) {
+
+					// PrintHelp.PrintDouble("length", curLength);
+
+					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (curLocation.getX()), (float) (curLocation.getY()), (float) (curLocation.getZ()), 0, 0, 0, 0, 1);
+					playerConnection.sendPacket(packet);
+
+					curLength += offsetLength;
+
+					if (curLength > projectileVectorlength) {
+
+						this.cancel();
+						return;
+					}
+
+					curLocation.add(vecOffset);
+				}
+
+			}
+		}.runTaskTimer(plugin, 0, 1);
 	}
 
 	@Override
 	protected void LoadParamsFromConfig(YamlConfiguration yamlConfiguration) {
 		super.LoadParamsFromConfig(yamlConfiguration);
-		
-		
+
 	}
 }

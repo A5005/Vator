@@ -5,8 +5,6 @@ author: Vator
 description: Demo Plugin
 commands:
   menu:
-    aliases: [hi]
+    aliases: [mn]
     description: Menu command
-  fire2:
-    aliases: [fr]
-    description: Fire command
+
