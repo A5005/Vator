@@ -9,7 +9,6 @@ import de.luke.naruto.constantData.Collections.MaterialGroupIcons;
 import de.luke.naruto.constantData.Collections.WeaponGroupIcons;
 import de.luke.naruto.constantData.Ids.PerspectiveIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
-import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.MaterialGroupIcon;
 import de.luke.naruto.tools.ItemMetadata;
 

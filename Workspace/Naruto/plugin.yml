@@ -7,3 +7,6 @@ commands:
   menu:
     aliases: [hi]
     description: Menu command
+  fire2:
+    aliases: [fr]
+    description: Fire command

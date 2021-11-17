@@ -1,7 +1,11 @@
 package de.luke.naruto;
 
+import java.io.File;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import de.luke.config.ConfigManager;
 import de.luke.naruto.constantData.Collections.CollectionInitializer;
 
 
@@ -16,6 +20,10 @@ public class Main extends JavaPlugin {
 		
 		System.out.println("##########  Plugin Naruto was loaded");
 		
+		ConfigManager.DataFolder=this.getDataFolder();
+		
+		
+		
 		try {
 			CollectionInitializer.InitializeCollections();
 		} catch (Exception e) {
@@ -23,8 +31,13 @@ public class Main extends JavaPlugin {
 		}
 
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new AttackListener(this), this);
 		
+
+		getCommand("fire2").setExecutor(new FireCommand());
 		getCommand("menu").setExecutor(new GuiCommands());
+
+		
 
 	}
 
