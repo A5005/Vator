@@ -3,6 +3,8 @@ package de.luke.naruto;
 import java.text.DecimalFormat;
 
 import de.luke.config.ConfigManager;
+import de.luke.naruto.tools.PrintHelp;
+import de.luke.weapons.WeaponLinear;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,7 +31,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 public class AttackListener implements Listener {
 
 	private Plugin _plugin;
-	private DecimalFormat format = new DecimalFormat("0.00");
+
 
 	public AttackListener(Plugin plugin) {
 		_plugin = plugin;
@@ -46,42 +48,19 @@ public class AttackListener implements Listener {
 
 		if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
 
-			Location playerLocation = player.getLocation();
-			Vector lookAtDirection = playerLocation.getDirection();
-
-			DecimalFormat format = new DecimalFormat("0.00");
-			Vector lookAtDirectionNorm = lookAtDirection.normalize();
-			System.out.println("Player Direction x/y/z=" + format.format(lookAtDirectionNorm.getX()) + "/" + format.format(lookAtDirectionNorm.getY()) + "/" + format.format(lookAtDirectionNorm.getZ()));
-
-			double length = lookAtDirection.length();
-			System.out.println("Length: " + length);
-			// -> direction already normalized
-
-			final int lookAtRange = 50;
-			Block targetBlock = getTargetBlock(player, lookAtRange);
-			System.out.println("Target Block: " + targetBlock.getType());
-
-			particleBeam(player);
-
+			//TODO Differentiate weapons
+			WeaponLinear weaponLinear = new WeaponLinear();
+			weaponLinear.execute(true, player, _plugin);
+			
 		}
 
 	}
 
-	private void PrintLocation(String name, Location loc) {
+	
 
-		System.out.println(name + "x/y/z " + format.format(loc.getX()) + "/" + format.format(loc.getY()) + "/" + format.format(loc.getZ()));
+	public void particleBeam2(Player player) {
 
-	}
-
-	private void PrintVector(String name, Vector vec) {
-
-		System.out.println(name + "x/y/z " + format.format(vec.getX()) + "/" + format.format(vec.getY()) + "/" + format.format(vec.getZ()));
-
-	}
-
-	public void particleBeam(Player player) {
-
-		YamlConfiguration customConfig = ConfigManager.LoadOrCreateConfig();
+		YamlConfiguration customConfig = ConfigManager.LoadOrCreateConfig("customConfig.yml");
 
 		double speed = customConfig.getDouble("speed");
 		double range = customConfig.getDouble("range");
@@ -103,10 +82,10 @@ public class AttackListener implements Listener {
 		Vector fromGroundToEyeHalf = (eyeLocation.toVector().subtract(groundLocation.toVector())).multiply(0.5);
 		Location midLocation = groundLocation.clone().add(fromGroundToEyeHalf);
 
-		PrintLocation("eyeLocation", eyeLocation);
-		PrintLocation("groundLocation", groundLocation);
-		PrintVector("fromGroundToEyeHalf", fromGroundToEyeHalf);
-		PrintLocation("midLocation", midLocation);
+		PrintHelp.PrintLocation("eyeLocation", eyeLocation);
+		PrintHelp.PrintLocation("groundLocation", groundLocation);
+		PrintHelp.PrintVector("fromGroundToEyeHalf", fromGroundToEyeHalf);
+		PrintHelp.PrintLocation("midLocation", midLocation);
 
 		// startLoc.subtract(new Vector(0, 0.5, 0));
 		// World world = startLoc.getWorld(); // We need this later to show the particle
@@ -117,7 +96,7 @@ public class AttackListener implements Listener {
 		// dir is the Vector direction (offset from 0,0,0) the player is facing in 3D
 		// space
 		Vector eyeDir = eyeLocation.getDirection();
-		PrintVector("eyeDir", eyeDir);
+		PrintHelp.PrintVector("eyeDir", eyeDir);
 
 		Block targetBlock = getTargetBlock(player, (int) range);
 
@@ -127,7 +106,7 @@ public class AttackListener implements Listener {
 		double distanceEyeToTarget = formEyeToTarget.length();
 		System.out.println("distanceEyeToTarget =" + distanceEyeToTarget + "Blocks");
 		Vector targetVector = eyeLocation.getDirection().multiply(distanceEyeToTarget);
-		PrintVector("targetVector", targetVector);
+		PrintHelp.PrintVector("targetVector", targetVector);
 
 		Vector projectileVector = fromGroundToEyeHalf.clone().add(targetVector);
 		double projectileVectorlength = projectileVector.length();
@@ -195,49 +174,6 @@ public class AttackListener implements Listener {
 		// 0 is the delay in ticks before starting this task
 		// 1 is the how often to repeat the run() function, in ticks (20 ticks are in
 		// one second)
-	}
-
-	public void fire(Player player) {
-
-		Location loc = player.getLocation();
-		// Projectile projectile = player.launchProjectile(Egg.class,
-		// loc.getDirection().normalize());
-		// Vector v = projectile.getLocation().getDirection().normalize();
-
-		new BukkitRunnable() {
-
-			double d = 0;
-
-			Location loc = player.getEyeLocation();
-			Vector originalDir = loc.getDirection().normalize();
-
-			Vector stepDir = originalDir.multiply(1);
-
-			float x = (float) loc.getX();
-			float y = (float) loc.getY();
-			float z = (float) loc.getZ();
-
-			public void run() {
-
-				d++;
-				z = z - 1;
-				x = x + 1;
-				y = y + 1;
-
-				PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, true, x, y, z, 0, 0, 0, 0, 1);
-				((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-
-				this.cancel();
-
-				/*
-				 * if (d > 60) {
-				 * 
-				 * this.cancel(); }
-				 */
-			}
-
-		}.runTaskTimer(_plugin, 0, 1);
-
 	}
 
 	public Block getTargetBlock(Player player, int range) {
