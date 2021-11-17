@@ -15,9 +15,6 @@ public class ConfigManager {
 	public static YamlConfiguration LoadOrCreateConfig(String fileName) {
 
 		//for example  DebugServer\plugins\Naruto\customConfig.yml
-		
-		System.out.println(DataFolder.getPath());
-
 		File customConfigFile = new File(DataFolder, fileName);
 
 		if (!customConfigFile.exists()) {

@@ -67,6 +67,7 @@ public class WeaponHelix extends WeaponBase {
 					// PrintHelp.PrintVector("curVector", curVector);
 					// PrintHelp.PrintDouble("CurLength", curLength);
 
+					curLocation.add(vecOffset);
 					Location helixLocation = curLocation.clone().add(curVector);
 
 					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (helixLocation.getX()), (float) (helixLocation.getY()), (float) (helixLocation.getZ()), 0, 0, 0, 0, 1);
@@ -80,10 +81,10 @@ public class WeaponHelix extends WeaponBase {
 						return;
 					}
 
-					curLocation.add(vecOffset);
+		
 
-					PrintHelp.PrintDouble("curAngle", curAngle);
-					PrintHelp.PrintDouble("curRadius", curRadius);
+					//PrintHelp.PrintDouble("curAngle", curAngle);
+					//PrintHelp.PrintDouble("curRadius", curRadius);
 
 					curAngle += stepAngle;
 
