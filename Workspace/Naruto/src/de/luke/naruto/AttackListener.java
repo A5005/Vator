@@ -1,19 +1,18 @@
 package de.luke.naruto;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 
-import org.bukkit.Effect;
+import de.luke.config.ConfigManager;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -22,10 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-import de.luke.config.ConfigManager;
 import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.IInventory;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityHeadRotation;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 //https://helpch.at/docs/1.8.8/
@@ -33,6 +29,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 public class AttackListener implements Listener {
 
 	private Plugin _plugin;
+	private DecimalFormat format = new DecimalFormat("0.00");
 
 	public AttackListener(Plugin plugin) {
 		_plugin = plugin;
@@ -68,27 +65,73 @@ public class AttackListener implements Listener {
 
 		}
 
-		ConfigManager.LoadOrCreateConfig();
-		
+	}
 
+	private void PrintLocation(String name, Location loc) {
+
+		System.out.println(name + "x/y/z " + format.format(loc.getX()) + "/" + format.format(loc.getY()) + "/" + format.format(loc.getZ()));
+
+	}
+
+	private void PrintVector(String name, Vector vec) {
+
+		System.out.println(name + "x/y/z " + format.format(vec.getX()) + "/" + format.format(vec.getY()) + "/" + format.format(vec.getZ()));
 
 	}
 
 	public void particleBeam(Player player) {
+
+		YamlConfiguration customConfig = ConfigManager.LoadOrCreateConfig();
+
+		double speed = customConfig.getDouble("speed");
+		double range = customConfig.getDouble("range");
+		int fillCount = customConfig.getInt("fillcount");
+
+		// double speed = 32; // Speed = z.B. 25 Blocks per Second
+		// double range = 32; // Range = z.B. 50 Block Length
+		// PacketPlayOutWorldParticles Max 32 when
+		// Parameter 2 = false
+		// Shot needs 2 Seconds, when Speed=25 Blocks/Second and range=50
+		// 1 Second = 20 Ticks => 2 Seconds => Particle needs 40 Ticks
+
+		double duration = range / speed;
+		System.out.println("Shot Duration =" + duration + " Seconds");
+
 		// Player's eye location is the starting location for the particle
-		Location startLoc = player.getEyeLocation();
-		startLoc.subtract(new Vector(0, 0.5, 0));
+		Location eyeLocation = player.getEyeLocation();
+		Location groundLocation = player.getLocation();
+		Vector fromGroundToEyeHalf = (eyeLocation.toVector().subtract(groundLocation.toVector())).multiply(0.5);
+		Location midLocation = groundLocation.clone().add(fromGroundToEyeHalf);
+
+		PrintLocation("eyeLocation", eyeLocation);
+		PrintLocation("groundLocation", groundLocation);
+		PrintVector("fromGroundToEyeHalf", fromGroundToEyeHalf);
+		PrintLocation("midLocation", midLocation);
+
+		// startLoc.subtract(new Vector(0, 0.5, 0));
+		// World world = startLoc.getWorld(); // We need this later to show the particle
 
 		// We need to clone() this location, because we will add() to it later.
-		Location particleLoc = startLoc.clone();
-
-		World world = startLoc.getWorld(); // We need this later to show the particle
+		// Location particleLoc = startLoc.clone();
 
 		// dir is the Vector direction (offset from 0,0,0) the player is facing in 3D
 		// space
-		Vector dir = startLoc.getDirection();
+		Vector eyeDir = eyeLocation.getDirection();
+		PrintVector("eyeDir", eyeDir);
 
-		dir.add(new Vector(0, 0.5, 0));
+		Block targetBlock = getTargetBlock(player, (int) range);
+
+		Location targetLocation = targetBlock.getLocation();
+		Vector formEyeToTarget = targetLocation.toVector().subtract(eyeLocation.toVector());
+
+		double distanceEyeToTarget = formEyeToTarget.length();
+		System.out.println("distanceEyeToTarget =" + distanceEyeToTarget + "Blocks");
+		Vector targetVector = eyeLocation.getDirection().multiply(distanceEyeToTarget);
+		PrintVector("targetVector", targetVector);
+
+		Vector projectileVector = fromGroundToEyeHalf.clone().add(targetVector);
+		double projectileVectorlength = projectileVector.length();
+		Vector projectileVectorDir = projectileVector.clone().normalize();
 
 		/*
 		 * vecOffset is used to determine where the next particle should appear We are
@@ -97,37 +140,54 @@ public class AttackListener implements Listener {
 		 * modifies the original variable! For a straight beam, we only need to
 		 * calculate this once, as the direction does not change.
 		 */
-		Vector vecOffset = dir.clone().multiply(0.5);
 
 		// This can also be done without the extra "dir" variable:
 		// Vector vecOffset = startLoc.getDirection().clone().multiply(0.5);
 
+		double particleCount = range / speed * 20;
+		System.out.println("ParticleCount =" + duration + " Seconds");
+
+		Vector vecOffset = projectileVectorDir.clone().multiply(range / (particleCount * fillCount));
+		double offsetLength = vecOffset.length();
+
+		Location curLocation = midLocation.clone();
+
+		// curLocation.add(vecOffset.multiply(0.5));
+
 		new BukkitRunnable() {
 			// The run() function runs every X number of ticks - see below
 
-			double d = 0;
+			double curLength = 0;
 
 			public void run() {
 
-				d++;
+				// PrintLocation("Cur Loc", curLocation);
 
 				// PARAMETER
 				// https://minecraft-server.eu/forum/threads/spigot-1-13-partikel.51243/
 
-				PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (particleLoc.getX()), (float) (particleLoc.getY()), (float) (particleLoc.getZ()), 0, 0, 0, 0, 1);
-				((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-
-				// Display the particle in the new location
-
-				// world.spawnParticle(Particle.FIREWORKS_SPARK, particleLoc, 0);
-				// System.out.println("NOIW");
-
 				// Now we add the direction vector offset to the particle's current location
-				particleLoc.add(vecOffset);
 
-				if (d > 20) {
+				// Idee: nur man selber sieht Fillcounts (die Pakete werden nicht an andere
+				// Spieler weitergeleitet)
+				for (int i = 0; i < fillCount; i++) {
+					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (curLocation.getX()), (float) (curLocation.getY()), (float) (curLocation.getZ()), 0, 0, 0, 0, 1);
+					((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 
-					this.cancel();
+					// Display the particle in the new location
+
+					// world.spawnParticle(Particle.FIREWORKS_SPARK, particleLoc, 0);
+					// System.out.println("NOIW");
+
+					curLength += offsetLength;
+
+					if (curLength > projectileVectorlength) {
+
+						this.cancel();
+						return;
+					}
+
+					curLocation.add(vecOffset);
 				}
 
 			}
