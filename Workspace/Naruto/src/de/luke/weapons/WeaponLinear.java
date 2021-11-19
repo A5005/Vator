@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
@@ -31,8 +32,12 @@ public class WeaponLinear extends WeaponBase {
 	protected void CreateParticles(Player player, Plugin plugin, double projectileVectorlength, Vector vecOffset, double offsetLength, Location curLocation, double particleCount) {
 		new BukkitRunnable() {
 
+			
+			
 			double curLength = 0;
-			PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+			
+			EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+			PlayerConnection playerConnection = entityPlayer.playerConnection;
 
 			public void run() {
 

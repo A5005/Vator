@@ -22,7 +22,7 @@ public class InventoryListener implements Listener {
 	@EventHandler
 	public void handleNavigatorGUIClickTop(InventoryClickEvent event) {
 
-		event.setCancelled(true);
+		//event.setCancelled(true);
 
 		ItemStack selectedItemStack = TryGetValidItemStack(event);
 		if (selectedItemStack == null)

@@ -23,6 +23,8 @@ public class AttackListener implements Listener {
 	@EventHandler
 	public void onLeftClick(PlayerInteractEvent event) {
 
+		
+
 		Player player = event.getPlayer();
 		if (player == null)
 			return;
@@ -34,9 +36,10 @@ public class AttackListener implements Listener {
 			// TODO Differentiate weapons
 			WeaponHelix weaponHelix = new WeaponHelix();
 			weaponHelix.execute(true, player, _plugin);
-
-			//WeaponLinear weaponLinear = new WeaponLinear();
-			//weaponLinear.execute(true, player, _plugin);
+			event.setCancelled(true);
+			
+			// WeaponLinear weaponLinear = new WeaponLinear();
+			// weaponLinear.execute(true, player, _plugin);
 		}
 
 	}

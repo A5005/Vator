@@ -1,6 +1,8 @@
 package de.luke.weapons;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -59,6 +61,8 @@ public class WeaponHelix extends WeaponBase {
 
 				for (int i = 0; i < fillCount; i++) {
 
+					// TODO !material.isSolid()
+
 					// PrintHelp.PrintDouble("length", curLength);
 
 					Vector curVector = (Rotate(toRotate, around, curAngle)).multiply(curRadius);
@@ -70,8 +74,22 @@ public class WeaponHelix extends WeaponBase {
 					curLocation.add(vecOffset);
 					Location helixLocation = curLocation.clone().add(curVector);
 
+					if (curLength > 1) {
+						
+						if (helixLocation.getBlock().getType().isSolid()) {
+							this.cancel();
+							return;
+						}
+					}
+
 					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (helixLocation.getX()), (float) (helixLocation.getY()), (float) (helixLocation.getZ()), 0, 0, 0, 0, 1);
 					playerConnection.sendPacket(packet);
+
+					for (Player online : Bukkit.getOnlinePlayers()) {
+						((CraftPlayer) online).getHandle().playerConnection.sendPacket(packet);
+					}
+
+					HasDamages(player, helixLocation);
 
 					curLength += offsetLength;
 
@@ -81,10 +99,8 @@ public class WeaponHelix extends WeaponBase {
 						return;
 					}
 
-		
-
-					//PrintHelp.PrintDouble("curAngle", curAngle);
-					//PrintHelp.PrintDouble("curRadius", curRadius);
+					// PrintHelp.PrintDouble("curAngle", curAngle);
+					// PrintHelp.PrintDouble("curRadius", curRadius);
 
 					curAngle += stepAngle;
 

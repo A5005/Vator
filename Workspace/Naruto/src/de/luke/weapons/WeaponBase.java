@@ -1,11 +1,19 @@
 package de.luke.weapons;
 
 import de.luke.config.ConfigManager;
+import net.minecraft.server.v1_8_R3.AxisAlignedBB;
+import net.minecraft.server.v1_8_R3.Entity;
+
+
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+
+import org.bukkit.entity.Damageable;
+
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockIterator;
@@ -66,7 +74,9 @@ public abstract class WeaponBase {
 		Block lastBlock = iter.next();
 		while (iter.hasNext()) {
 			lastBlock = iter.next();
-			if (lastBlock.getType() == Material.AIR) {
+
+			// Air is not solid
+			if (lastBlock.getType().isSolid() == false) {
 				continue;
 			}
 			break;
@@ -96,6 +106,32 @@ public abstract class WeaponBase {
 		speed = yamlConfiguration.getDouble("speed");
 		range = yamlConfiguration.getDouble("range");
 		fillCount = yamlConfiguration.getInt("fillcount");
+
+	}
+
+	protected boolean HasDamages(Player player, Location particleLoc) {
+
+		// TODO ONLY IF BLOCK CHANGED getNearbyEntities
+
+		// Search for any entities near the particle's current location
+		for (org.bukkit.entity.Entity entity : particleLoc.getWorld().getNearbyEntities(particleLoc, 5, 5, 5)) {
+			// We only care about living entities. Any others will be ignored.
+			if (!(entity instanceof LivingEntity))
+				continue;
+
+			if (entity == player)
+				continue;
+
+			Entity craftEntity = ((CraftEntity) entity).getHandle();
+			AxisAlignedBB boundingBox = craftEntity.getBoundingBox();
+
+			System.out.println("bb1 " + boundingBox.a + boundingBox.b + boundingBox.c);
+			System.out.println("bb1 " + boundingBox.d + boundingBox.e + boundingBox.f);
+
+
+		}
+
+		return true;
 
 	}
 
