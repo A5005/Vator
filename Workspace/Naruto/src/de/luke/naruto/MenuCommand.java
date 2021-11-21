@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import de.luke.naruto.Perspectives.MainPerspective;
 
-public class GuiCommands implements CommandExecutor {
+public class MenuCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

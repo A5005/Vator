@@ -34,8 +34,8 @@ public class Main extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new AttackListener(this), this);
 		
 
-		getCommand("menu").setExecutor(new GuiCommands());
-
+		getCommand("menu").setExecutor(new MenuCommand());
+		getCommand("claim").setExecutor(new ClaimCommand());
 		
 
 	}

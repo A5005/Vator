@@ -11,6 +11,7 @@ public class TypeIds {
 	public static final int WorkBenchIcon = 5;
 	public static final int ClaimIcon = 6;
 	public static final int CraftWeaponIcon = 7;
+	public static final int BackIcon = 8;
 
 	
 }

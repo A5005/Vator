@@ -28,19 +28,15 @@ public class CraftingPerspective {
 			player.closeInventory();
 
 		WeaponIcon weaponIcon = WeaponIcons.GetWeaponIconFromId(weaponId);
-		Inventory inventory = Bukkit.createInventory(null, 36, ">" + weaponIcon.GetDisplayName());
+		Inventory inventory = Bukkit.createInventory(null, 36, weaponIcon.GetDisplayName());
 
-		WeaponIcons.AddToInventory( inventory, weaponId, 4, TypeIds.CraftWeaponIcon);
-		BaseIcons.AddToInventory( inventory, UniqueIds.Workbench, 20, TypeIds.CraftWeaponIcon);
-		BaseIcons.AddToInventory( inventory, UniqueIds.GreenWool, 31, TypeIds.ClaimIcon);
-		
-		//AddToInventory(BaseIcons, inventory, UniqueIds.Workbench, 20, TypeIds.WorkBenchIcon);
-		//AddToInventory(BaseIcons, inventory, UniqueIds.GreenWool, 31, TypeIds.ClaimIcon);
+		WeaponIcons.AddToInventory(inventory, weaponId, 4, TypeIds.CraftWeaponIcon);
+		BaseIcons.AddToInventory(inventory, UniqueIds.Workbench, 20, TypeIds.WorkBenchIcon);
+		BaseIcons.AddToInventory(inventory, UniqueIds.Barrier, 27, TypeIds.BackIcon);
+		BaseIcons.AddToInventory(inventory, UniqueIds.GreenWool, 31, TypeIds.ClaimIcon);
 
 		player.openInventory(inventory);
 		return inventory;
 	}
-
-	
 
 }

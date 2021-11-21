@@ -8,3 +8,7 @@ commands:
     aliases: [mn]
     description: Menu command
 
+  claim:
+    aliases: [cl]
+    description: Claim command
+

@@ -20,7 +20,7 @@ public class MainPerspective {
 		if (openInventory != null)
 			player.closeInventory();
 
-		Inventory inventory = Bukkit.createInventory(null, 36, "§7§l> Materials");
+		Inventory inventory = Bukkit.createInventory(null, 36, "§7§lMaterials");
 		UpdateAll(inventory);
 		player.openInventory(inventory);
 		return inventory;

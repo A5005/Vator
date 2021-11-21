@@ -39,8 +39,8 @@ public class InventoryListener implements Listener {
 
 		int uniqueIdMetaData = (int) ItemMetadata.getMetadata(selectedItemStack, MetaDataIds.UniqueIdMetaData);
 
-		PrintHelp.Print("Type  " + typeMetaData);
-		PrintHelp.Print("Unique  " + uniqueIdMetaData);
+		//PrintHelp.Print("Type  " + typeMetaData);
+		//PrintHelp.Print("Unique  " + uniqueIdMetaData);
 
 		Inventory clickedInventory = event.getClickedInventory();
 
@@ -58,8 +58,12 @@ public class InventoryListener implements Listener {
 		case TypeIds.Weapon:
 			CraftingPerspective.OpenInventory(player, clickedInventory, uniqueIdMetaData);
 			break;
+			
+		case TypeIds.BackIcon:
+			MainPerspective.OpenInventory(player, clickedInventory);
+			break;
 
-		}
+		};
 
 	}
 

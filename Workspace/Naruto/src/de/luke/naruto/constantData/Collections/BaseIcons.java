@@ -24,6 +24,7 @@ public class BaseIcons {
 
 		AddIcon(UniqueIds.Workbench, 0, "§f§lWorkbench", "");
 		AddIcon(UniqueIds.GreenWool, 0, "§f§lWool", "");
+		AddIcon(UniqueIds.Barrier, 0, "§f§lBack", "");
 	}
 
 	private static void AddIcon(int uniqueId, int position, String displayName, String dbAccessName) {

@@ -37,7 +37,7 @@ public class UniqueIds {
 	public static final int Coal = 25;
 	public static final int Flint = 26;
 	public static final int Creeper = 27;
-	public static final int Firework = 28;
+	public static final int Compass = 28;
 	
 	//RareMat
 	public static final int Spider = 29;
@@ -48,18 +48,19 @@ public class UniqueIds {
 	public static final int Gold = 34;
 	public static final int PrisShard = 35;
 	public static final int PrisCrystal = 36;
-	public static final int Compass = 37;
+	public static final int Watch = 37;
 	
 	//EpicMat
-	public static final int Tear = 38;
-	public static final int Blaze = 39;
-	public static final int Slime = 40;
-	public static final int Ender = 41;
-	public static final int Diamond = 42;
-	public static final int Emerald = 43;
-	public static final int Bottle = 44;
-	public static final int Star = 45;
-	public static final int Crystal = 46;
+	public static final int Ferm = 38;
+	public static final int Tear = 39;
+	public static final int Blaze = 40;
+	public static final int Slime = 41;
+	public static final int Ender = 42;
+	public static final int Diamond = 43;
+	public static final int Emerald = 44;
+	public static final int Bottle = 45;
+	public static final int Star = 46;
+	
 	
 	//CommonWeap
 	public static final int Arrow = 50;
@@ -81,5 +82,7 @@ public class UniqueIds {
 	//Crafting
 	public static final int Workbench = 200;
 	public static final int GreenWool = 201;
+	public static final int Barrier = 202;
+	
 	
 }
