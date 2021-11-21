@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.inventory.Inventory;
+
 import de.luke.naruto.constantData.Ids.UniqueIds;
+import de.luke.naruto.constantData.Items.BaseIcon;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.WeaponIcon;
 
-public class WeaponIcons {
+public class WeaponIcons extends BaseIcons {
 
 	private static HashMap<Integer, WeaponIcon> _weaponIcons;
 
@@ -49,9 +52,9 @@ public class WeaponIcons {
 				put(UniqueIds.StonePresPlate, 3);
 			}
 		};
-		
+
 		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "§f§lThrowing Axe", "number", costs);
-		
+
 		// RareWeap
 		costs = new HashMap<Integer, Integer>() {
 			{
@@ -61,10 +64,10 @@ public class WeaponIcons {
 				put(UniqueIds.Iron, 3);
 			}
 		};
-		
+
 		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "§f§lThrowing Axe", "number", costs);
-		
-		//LegendWeap
+
+		// LegendWeap
 		costs = new HashMap<Integer, Integer>() {
 			{
 				put(UniqueIds.Stick, 500);
@@ -74,11 +77,9 @@ public class WeaponIcons {
 				put(UniqueIds.Diamond, 3);
 			}
 		};
-		
-		
+
 		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "§f§lThrowing Axe", "number", costs);
-		
-		
+
 		_isInit = true;
 	}
 
@@ -108,9 +109,26 @@ public class WeaponIcons {
 		return weaponGroupIconsArray;
 
 	}
-	
+
 	public static WeaponIcon GetWeaponIconFromId(int uniqueId) {
 		return _weaponIcons.get(uniqueId);
+	}
+
+	public static BaseIcon GetBaseIconFromId(int uniqueId) {
+		return _weaponIcons.get(uniqueId);
+	}
+	
+	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId) {
+
+		BaseIcon baseIcon = GetBaseIconFromId(uniqueId);
+		BaseIcons.AddToInventory(baseIcon, inventory, uniqueId, position, typeId);
+	}
+
+	public static void ListWeaponIcons() {
+
+		for (HashMap.Entry<Integer, WeaponIcon> entry : _weaponIcons.entrySet()) {
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
 	}
 
 }

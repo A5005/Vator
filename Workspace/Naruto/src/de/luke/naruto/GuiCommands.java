@@ -17,7 +17,7 @@ public class GuiCommands implements CommandExecutor {
 		Player player = (Player) sender;
 		// player.sendMessage(ChatColor.DARK_RED + "Hello, " + player.getName() +
 		// ChatColor.GREEN + "!");
-		MainPerspective.OpenInventory(player);
+		MainPerspective.OpenInventory(player, null);
 
 		return true;
 	}

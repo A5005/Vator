@@ -4,8 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
+
+import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.UniqueIds;
+import de.luke.naruto.constantData.Items.BaseIcon;
 import de.luke.naruto.constantData.Items.MaterialIcon;
+import de.luke.naruto.constantData.Items.MaterialInfo;
+import de.luke.naruto.constantData.Items.WeaponIcon;
+import de.luke.naruto.tools.ItemMetadata;
 
 public class MaterialIcons {
 
@@ -16,7 +26,7 @@ public class MaterialIcons {
 
 		_materialIcons = new HashMap<Integer, MaterialIcon>();
 
-		//CommonMat
+		// CommonMat
 		AddIcon(UniqueIds.Stick, UniqueIds.CommonMat, 18, "§f§lStick", "A1");
 		AddIcon(UniqueIds.WoodenBtn, UniqueIds.CommonMat, 19, "§f§lWooden Button", "A2");
 		AddIcon(UniqueIds.StoneBtn, UniqueIds.CommonMat, 20, "§f§lStone Button", "A3");
@@ -28,8 +38,8 @@ public class MaterialIcons {
 		AddIcon(UniqueIds.Leather, UniqueIds.CommonMat, 24, "§f§lLeather", "A7");
 		AddIcon(UniqueIds.Paper, UniqueIds.CommonMat, 25, "§f§lPaper", "A8");
 		AddIcon(UniqueIds.Book, UniqueIds.CommonMat, 26, "§f§lBook", "A9");
-		
-		//UnCommonMat
+
+		// UnCommonMat
 		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "§f§lStick", "B1");
 		AddIcon(UniqueIds.Bone, UniqueIds.UnCommonMat, 19, "§f§lWooden Button", "B2");
 		AddIcon(UniqueIds.Brick, UniqueIds.UnCommonMat, 20, "§f§lStone Button", "B3");
@@ -38,7 +48,7 @@ public class MaterialIcons {
 		AddIcon(UniqueIds.Coal, UniqueIds.UnCommonMat, 23, "§f§lCoal", "B6");
 		AddIcon(UniqueIds.Flint, UniqueIds.UnCommonMat, 24, "§f§lFlint", "B7");
 
-		//RareMat
+		// RareMat
 		AddIcon(UniqueIds.Spider, UniqueIds.RareMat, 18, "§f§lSpider", "C1");
 		AddIcon(UniqueIds.Glowstone, UniqueIds.RareMat, 19, "§f§lGlowstone", "C2");
 		AddIcon(UniqueIds.Iron, UniqueIds.RareMat, 20, "§f§lIron", "C3");
@@ -46,8 +56,8 @@ public class MaterialIcons {
 		AddIcon(UniqueIds.PrisShard, UniqueIds.RareMat, 22, "§f§lPrismarine Shard", "C5");
 		AddIcon(UniqueIds.PrisCrystal, UniqueIds.RareMat, 23, "§f§lPrismarine Crystal", "C6");
 		AddIcon(UniqueIds.Compass, UniqueIds.RareMat, 24, "§f§lCompass", "C7");
-		
-		//EpicMat
+
+		// EpicMat
 		AddIcon(UniqueIds.Tear, UniqueIds.EpicMat, 18, "§f§lGhast Tear", "D1");
 		AddIcon(UniqueIds.Blaze, UniqueIds.EpicMat, 19, "§f§lBlaze Powder", "D2");
 		AddIcon(UniqueIds.Slime, UniqueIds.EpicMat, 20, "§f§lSlimeball", "D3");
@@ -55,8 +65,7 @@ public class MaterialIcons {
 		AddIcon(UniqueIds.Diamond, UniqueIds.EpicMat, 22, "§f§lDiamond", "D5");
 		AddIcon(UniqueIds.Emerald, UniqueIds.EpicMat, 23, "§f§lEmerald", "D6");
 		AddIcon(UniqueIds.Bottle, UniqueIds.EpicMat, 24, "§f§lEnchanting Bottle", "D7");
-		
-		
+
 		_isInit = true;
 	}
 
@@ -90,4 +99,22 @@ public class MaterialIcons {
 	public static MaterialIcon GetMaterialIconFromId(int uniqueId) {
 		return _materialIcons.get(uniqueId);
 	}
+
+	public static BaseIcon GetBaseIconFromId(int uniqueId) {
+		return _materialIcons.get(uniqueId);
+	}
+
+	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId) {
+
+		BaseIcon baseIcon = GetBaseIconFromId(uniqueId);
+		BaseIcons.AddToInventory(baseIcon, inventory, uniqueId, position, typeId);
+	}
+
+	public static void ListWeaponIcons() {
+
+		for (HashMap.Entry<Integer, MaterialIcon> entry : _materialIcons.entrySet()) {
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
+	}
+
 }

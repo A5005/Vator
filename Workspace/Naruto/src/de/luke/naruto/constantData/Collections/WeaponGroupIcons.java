@@ -11,6 +11,7 @@ import org.bukkit.material.MaterialData;
 import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.constantData.Ids.UniqueIds;
+import de.luke.naruto.constantData.Items.BaseIcon;
 import de.luke.naruto.constantData.Items.MaterialGroupIcon;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
@@ -109,7 +110,7 @@ public class WeaponGroupIcons {
 			itemStack.setItemMeta(itemMeta);
 
 			// Important!!! Metadata only in the return value
-			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, TypeIds.Material);
+			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, TypeIds.Weapon);
 			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.UniqueIdMetaData, uniqueId);
 
 			int position = weaponIcon.GetPosition();
@@ -134,6 +135,8 @@ public class WeaponGroupIcons {
 		return _positions.get(position);
 
 	}
+	
+	
 
 
 }

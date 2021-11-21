@@ -78,4 +78,8 @@ public class UniqueIds {
 	//Fill
 	public static final int Glass = 100;
 	
+	//Crafting
+	public static final int Workbench = 200;
+	public static final int GreenWool = 201;
+	
 }

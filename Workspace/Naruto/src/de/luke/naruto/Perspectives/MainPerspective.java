@@ -15,7 +15,10 @@ import de.luke.naruto.tools.PrintHelp;
 
 public class MainPerspective {
 
-	public static Inventory OpenInventory(Player player) {
+	public static Inventory OpenInventory(Player player, Inventory openInventory) {
+
+		if (openInventory != null)
+			player.closeInventory();
 
 		Inventory inventory = Bukkit.createInventory(null, 36, "§7§l> Materials");
 		UpdateAll(inventory);
@@ -38,10 +41,9 @@ public class MainPerspective {
 	public static void UpdateMaterialSubItems(Inventory inventory, int materialGroupIconId) {
 		MaterialGroupIcons.PutSubIconsToInventory(inventory, materialGroupIconId);
 	}
-	
+
 	public static void UpdateWeaponSubItems(Inventory inventory, int weaponGroupIconId) {
 		WeaponGroupIcons.PutSubIconsToInventory(inventory, weaponGroupIconId);
 	}
 
-	
 }

@@ -6,8 +6,6 @@ import org.bukkit.Material;
 public class MaterialInfo {
 
 	
-	
-	
 	public MaterialInfo(int uniqueId, Material material, int byteValue) {
 
 		_uniqueId = uniqueId;

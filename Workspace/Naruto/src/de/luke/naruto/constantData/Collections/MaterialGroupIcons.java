@@ -123,7 +123,6 @@ public class MaterialGroupIcons {
 		for (int i = _minSubPosition; i <= _maxSubPosition; i++) {
 
 			if (!positions.contains(i)) {
-				PrintHelp.Print("remove " + i);
 				ItemStack itemstack = inventory.getItem(i);
 				inventory.remove(itemstack);
 			}

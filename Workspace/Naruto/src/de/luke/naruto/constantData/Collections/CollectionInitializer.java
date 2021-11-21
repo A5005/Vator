@@ -11,6 +11,7 @@ public class CollectionInitializer {
 		MaterialInfos.Create();
 		MaterialIcons.Create();
 		WeaponIcons.Create();
+		BaseIcons.Create();
 		
 		
 		//construct MaterialIcons as sub objects

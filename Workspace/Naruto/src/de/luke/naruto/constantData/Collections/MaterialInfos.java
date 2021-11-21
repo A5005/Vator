@@ -87,9 +87,13 @@ public class MaterialInfos {
 		//ExclusiveWeap
 		AddMaterialItem(UniqueIds.DiamondAxe, Material.DIAMOND_AXE, 0);
 		
-		// Fill
+		//Fill
 		AddMaterialItem(UniqueIds.Glass, Material.STAINED_GLASS_PANE, 15);
 
+		//Crafting
+		AddMaterialItem(UniqueIds.Workbench, Material.WORKBENCH, 0);
+		AddMaterialItem(UniqueIds.GreenWool, Material.WOOL , 5);
+		
 	}
 
 	private static void AddMaterialItem(int uniqueId, Material material, int byteValue) {
