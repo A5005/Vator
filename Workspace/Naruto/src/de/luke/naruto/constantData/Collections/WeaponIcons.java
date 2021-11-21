@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.luke.naruto.constantData.Ids.UniqueIds;
+import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.WeaponIcon;
 
 public class WeaponIcons {
@@ -22,14 +23,62 @@ public class WeaponIcons {
 
 		costs = new HashMap<Integer, Integer>() {
 			{
-				put(UniqueIds.Stick, 1);
-				put(UniqueIds.Paper, 3);
+				put(UniqueIds.Stick, 2);
+				put(UniqueIds.Feather, 5);
 			}
 		};
 
-		// TODO One table for each weapon group
-		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 0, "§f§lThrowing Knife", "number", costs);
+		// CommonWeap
+		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "§f§lThrowing Knife", "number", costs);
 
+		costs = new HashMap<Integer, Integer>() {
+			{
+				put(UniqueIds.Stick, 3);
+				put(UniqueIds.Leather, 5);
+			}
+		};
+
+		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "§f§lThrowing Axe", "number", costs);
+
+		// UnCommonWeap
+
+		costs = new HashMap<Integer, Integer>() {
+			{
+				put(UniqueIds.Stick, 20);
+				put(UniqueIds.Clay, 5);
+				put(UniqueIds.StonePresPlate, 3);
+			}
+		};
+		
+		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "§f§lThrowing Axe", "number", costs);
+		
+		// RareWeap
+		costs = new HashMap<Integer, Integer>() {
+			{
+				put(UniqueIds.Stick, 100);
+				put(UniqueIds.Clay, 20);
+				put(UniqueIds.Spider, 2);
+				put(UniqueIds.Iron, 3);
+			}
+		};
+		
+		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "§f§lThrowing Axe", "number", costs);
+		
+		//LegendWeap
+		costs = new HashMap<Integer, Integer>() {
+			{
+				put(UniqueIds.Stick, 500);
+				put(UniqueIds.Clay, 100);
+				put(UniqueIds.Spider, 15);
+				put(UniqueIds.Slime, 1);
+				put(UniqueIds.Diamond, 3);
+			}
+		};
+		
+		
+		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "§f§lThrowing Axe", "number", costs);
+		
+		
 		_isInit = true;
 	}
 
@@ -42,7 +91,6 @@ public class WeaponIcons {
 		WeaponIcon weaponIcon = new WeaponIcon(uniqueId, weaponGroupId, position, displayName, dbAccessName, costs);
 		_weaponIcons.put(uniqueId, weaponIcon);
 	}
-	
 
 	public static int[] FindMaterialGroupIcons(int weaponGroupId) {
 
@@ -59,6 +107,10 @@ public class WeaponIcons {
 
 		return weaponGroupIconsArray;
 
+	}
+	
+	public static WeaponIcon GetWeaponIconFromId(int uniqueId) {
+		return _weaponIcons.get(uniqueId);
 	}
 
 }

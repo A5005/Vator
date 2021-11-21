@@ -4,8 +4,6 @@ import de.luke.config.ConfigManager;
 import net.minecraft.server.v1_8_R3.AxisAlignedBB;
 import net.minecraft.server.v1_8_R3.Entity;
 
-
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -109,12 +107,12 @@ public abstract class WeaponBase {
 
 	}
 
-	protected boolean HasDamages(Player player, Location particleLoc) {
+	protected boolean HasDamages(Player player, Location particleLoc, double x, double y, double z) {
 
 		// TODO ONLY IF BLOCK CHANGED getNearbyEntities
 
 		// Search for any entities near the particle's current location
-		for (org.bukkit.entity.Entity entity : particleLoc.getWorld().getNearbyEntities(particleLoc, 5, 5, 5)) {
+		for (org.bukkit.entity.Entity entity : particleLoc.getWorld().getNearbyEntities(particleLoc, 3, 3, 3)) {
 			// We only care about living entities. Any others will be ignored.
 			if (!(entity instanceof LivingEntity))
 				continue;
@@ -123,15 +121,29 @@ public abstract class WeaponBase {
 				continue;
 
 			Entity craftEntity = ((CraftEntity) entity).getHandle();
-			AxisAlignedBB boundingBox = craftEntity.getBoundingBox();
 
-			System.out.println("bb1 " + boundingBox.a + boundingBox.b + boundingBox.c);
-			System.out.println("bb1 " + boundingBox.d + boundingBox.e + boundingBox.f);
+			// see https://bukkit.org/threads/axisalignedbb.9315/
+			// Here's a list of what the useful methods do anyway:
+			AxisAlignedBB bb = craftEntity.getBoundingBox();
 
+			if (x > bb.a && x < bb.d && y > bb.b && y < bb.e && z > bb.c && z < bb.f) {
+				System.out.println("*****HIT*******");
 
+				((LivingEntity) entity).setHealth(0);
+				return true;
+			}
+
+			/*
+			 * System.out.println("xMin=" + xmin + " yMin=" + ymin + " zMin= " + zmin);
+			 * System.out.println("xMax=" + xmax + " yMax=" + ymax + " zMax= " + zmax);
+			 * 
+			 * System.out.println("bb1 x=" + boundingBox.a + " y=" + boundingBox.b + " z= "
+			 * + boundingBox.c); System.out.println("bb2 x=" + boundingBox.d + " y=" +
+			 * boundingBox.e + " z= " + boundingBox.f);
+			 */
 		}
 
-		return true;
+		return false;
 
 	}
 

@@ -11,12 +11,13 @@ import de.luke.naruto.constantData.Ids.PerspectiveIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.constantData.Items.MaterialGroupIcon;
 import de.luke.naruto.tools.ItemMetadata;
+import de.luke.naruto.tools.PrintHelp;
 
 public class MainPerspective {
 
 	public static Inventory OpenInventory(Player player) {
 
-		Inventory inventory = Bukkit.createInventory(null, 36, "§7§lMaterials");
+		Inventory inventory = Bukkit.createInventory(null, 36, "§7§l> Materials");
 		UpdateAll(inventory);
 		player.openInventory(inventory);
 		return inventory;
@@ -26,36 +27,21 @@ public class MainPerspective {
 
 		UpdateMainItems(inventory);
 		MaterialGroupIcon firstmMaterialGroupIconId = MaterialGroupIcons.GetMaterialGroupIconFromPosition(0);
-		UpdateSubItems(inventory, firstmMaterialGroupIconId.GetUniqueId());
+		UpdateMaterialSubItems(inventory, firstmMaterialGroupIconId.GetUniqueId());
 	}
 
 	private static void UpdateMainItems(Inventory inventory) {
-		MaterialGroupIcons.PutIconsToInventory(inventory, PerspectiveIds.MainPerspoective);
-		WeaponGroupIcons.PutIconsToInventory(inventory, PerspectiveIds.MainPerspoective);
+		MaterialGroupIcons.PutIconsToInventory(inventory);
+		WeaponGroupIcons.PutIconsToInventory(inventory);
 	}
 
-	public static void UpdateSubItems(Inventory inventory, int materialGroupIconId) {
-		MaterialGroupIcons.PutSubIconsToInventory(inventory, materialGroupIconId, PerspectiveIds.MainPerspoective);
-		System.out.println("UpdateSubItems " + materialGroupIconId);
+	public static void UpdateMaterialSubItems(Inventory inventory, int materialGroupIconId) {
+		MaterialGroupIcons.PutSubIconsToInventory(inventory, materialGroupIconId);
+	}
+	
+	public static void UpdateWeaponSubItems(Inventory inventory, int weaponGroupIconId) {
+		WeaponGroupIcons.PutSubIconsToInventory(inventory, weaponGroupIconId);
 	}
 
-	public static void ProcessSelectedItem(ItemStack itemStack, Inventory clickedInventory) {
-
-		if (!ItemMetadata.hasMetadata(itemStack, "T"))
-			return;
-
-		int typeId = (int) ItemMetadata.getMetadata(itemStack, "T");
-		if (typeId == TypeIds.MaterialGroup) {
-			if (!ItemMetadata.hasMetadata(itemStack, "U"))
-				return;
-
-			int uniqueId = (int) ItemMetadata.getMetadata(itemStack, "U");
-			
-			//TODO Gibt ja nur SubItems für ein Mat + Löschen der unbenutzen Felder
-			UpdateSubItems(clickedInventory, uniqueId);
-		}
-
-		System.out.println("+++++++++++++ ProcessSelectedItem");
-	}
-
+	
 }

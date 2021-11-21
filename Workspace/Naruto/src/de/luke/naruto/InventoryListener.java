@@ -1,6 +1,5 @@
 package de.luke.naruto;
 
-
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,41 +10,49 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-
 import de.luke.naruto.Perspectives.CraftingPerspective;
 import de.luke.naruto.Perspectives.MainPerspective;
+import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.PerspectiveIds;
+import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.tools.ItemMetadata;
+import de.luke.naruto.tools.PrintHelp;
 
 public class InventoryListener implements Listener {
 
 	@EventHandler
 	public void handleNavigatorGUIClickTop(InventoryClickEvent event) {
 
-		//event.setCancelled(true);
-
 		ItemStack selectedItemStack = TryGetValidItemStack(event);
 		if (selectedItemStack == null)
 			return;
 
-		if (!ItemMetadata.hasMetadata(selectedItemStack, "P"))
+		event.setCancelled(true);
+
+		if (!ItemMetadata.hasMetadata(selectedItemStack, MetaDataIds.TypeMetaData))
 			return;
 
-		int perspectiveId = (int) ItemMetadata.getMetadata(selectedItemStack, "P");
-
-		switch (perspectiveId) {
-
-		case PerspectiveIds.MainPerspoective:
-			Inventory clickedInventory = event.getClickedInventory();
-			MainPerspective.ProcessSelectedItem(selectedItemStack, clickedInventory);
-			break;
-
-		case PerspectiveIds.CraftingtPerspective:
-			CraftingPerspective.ProcessSelectedItem(selectedItemStack);
-			break;
-
-		default:
+		if (!ItemMetadata.hasMetadata(selectedItemStack, MetaDataIds.UniqueIdMetaData))
 			return;
+
+		int typeMetaData = (int) ItemMetadata.getMetadata(selectedItemStack, MetaDataIds.TypeMetaData);
+
+		PrintHelp.Print(typeMetaData);
+
+		int uniqueIdMetaData = (int) ItemMetadata.getMetadata(selectedItemStack, MetaDataIds.UniqueIdMetaData);
+
+		PrintHelp.Print(uniqueIdMetaData);
+
+		Inventory clickedInventory = event.getClickedInventory();
+
+		switch (typeMetaData) {
+		case TypeIds.MaterialGroup:
+			MainPerspective.UpdateMaterialSubItems(clickedInventory, uniqueIdMetaData);
+			break;
+
+		case TypeIds.WeaponGroup:
+			MainPerspective.UpdateWeaponSubItems(clickedInventory, uniqueIdMetaData);
+			break;
 
 		}
 
@@ -73,5 +80,4 @@ public class InventoryListener implements Listener {
 
 	}
 
-	
 }

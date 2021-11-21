@@ -44,6 +44,8 @@ public class WeaponHelix extends WeaponBase {
 
 		PrintHelp.PrintDouble("particleCount", particleCount);
 
+		// System.currentTimeMillis();
+
 		new BukkitRunnable() {
 
 			double curLength = 0;
@@ -75,23 +77,32 @@ public class WeaponHelix extends WeaponBase {
 					Location helixLocation = curLocation.clone().add(curVector);
 
 					if (curLength > 1) {
-						
+
 						if (helixLocation.getBlock().getType().isSolid()) {
 							this.cancel();
 							return;
 						}
 					}
 
-					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) (helixLocation.getX()), (float) (helixLocation.getY()), (float) (helixLocation.getZ()), 0, 0, 0, 0, 1);
+					double x = helixLocation.getX();
+					double y = helixLocation.getY();
+					double z = helixLocation.getZ();
+
+					PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.FLAME, false, (float) x, (float) (y), (float) (z), 0, 0, 0, 0, 1);
 					playerConnection.sendPacket(packet);
 
+					// TODO Only Players around
 					for (Player online : Bukkit.getOnlinePlayers()) {
 						((CraftPlayer) online).getHandle().playerConnection.sendPacket(packet);
 					}
 
-					HasDamages(player, helixLocation);
-
 					curLength += offsetLength;
+
+					if (HasDamages(player, helixLocation, x, y, z)) {
+
+						this.cancel();
+						return;
+					}
 
 					if (curLength > projectileVectorlength) {
 

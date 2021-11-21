@@ -1,28 +1,32 @@
 package de.luke.naruto.constantData.Collections;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
+import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.MaterialGroupIcon;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.tools.ItemMetadata;
+import de.luke.naruto.tools.PrintHelp;
 
 public class MaterialGroupIcons {
 
 	private static HashMap<Integer, MaterialGroupIcon> _materialGroupIcons;
 	private static HashMap<Integer, MaterialGroupIcon> _positions;
-	private static int _minPosition = 10000;
-	private static int _maxPosition = 0;
+	private static final int _minPosition = 0;
+	private static final int _maxPosition = 3;
 
-	private static int _minSubPosition = 10000;
-	private static int _maxSubPosition = 0;
+	private static int _minSubPosition = 18;
+	private static int _maxSubPosition = 26;
 
 	public static void Create() throws Exception {
 
@@ -44,15 +48,8 @@ public class MaterialGroupIcons {
 
 		// Backward Pointer
 		int[] materialIconIds = MaterialIcons.FindMaterialGroupIcons(materialInfoId);
-		UpdateSubMinMax(materialIconIds);
 		MaterialGroupIcon materialGroupIcon = new MaterialGroupIcon(materialInfoId, position, displayName, dbAccessName, materialIconIds);
 		_materialGroupIcons.put(materialInfoId, materialGroupIcon);
-
-		if (position < _minPosition)
-			_minPosition = position;
-
-		if (position > _maxPosition)
-			_maxPosition = position;
 
 		if (!_positions.containsKey(position))
 			_positions.put(position, materialGroupIcon);
@@ -62,24 +59,8 @@ public class MaterialGroupIcons {
 
 	}
 
-	private static void UpdateSubMinMax(int[] materialIconIds) {
-
-		for (int i = 0; i < materialIconIds.length; i++) {
-
-			MaterialIcon materialIcon = MaterialIcons.GetMaterialIconFromId(materialIconIds[i]);
-			int position = materialIcon.GetPosition();
-
-			if (position < _minSubPosition)
-				_minSubPosition = position;
-
-			if (position > _maxSubPosition)
-				_maxSubPosition = position;
-
-		}
-	}
-
 	@SuppressWarnings("deprecation")
-	public static void PutIconsToInventory(Inventory inventory, int perspectiveId) {
+	public static void PutIconsToInventory(Inventory inventory) {
 
 		for (int position = _minPosition; position <= _maxPosition; position++) {
 
@@ -87,7 +68,9 @@ public class MaterialGroupIcons {
 			if (materialGroupIcon == null)
 				continue;
 
-			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(materialGroupIcon.GetUniqueId());
+			int uniqueId = materialGroupIcon.GetUniqueId();
+
+			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
 
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
@@ -96,9 +79,8 @@ public class MaterialGroupIcons {
 			itemStack.setItemMeta(itemMeta);
 
 			// Important!!! Metadata only in the return value
-			itemStack = ItemMetadata.setMetadata(itemStack, "P", perspectiveId);
-			itemStack = ItemMetadata.setMetadata(itemStack, "T", TypeIds.MaterialGroup);
-			itemStack = ItemMetadata.setMetadata(itemStack, "U", materialGroupIcon.GetUniqueId());
+			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, TypeIds.MaterialGroup);
+			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.UniqueIdMetaData, uniqueId);
 
 			inventory.setItem(position, itemStack);
 
@@ -106,11 +88,12 @@ public class MaterialGroupIcons {
 
 	}
 
-	public static void PutSubIconsToInventory(Inventory inventory, int materialGroupId, int perspectiveId) {
+	@SuppressWarnings("deprecation")
+	public static void PutSubIconsToInventory(Inventory inventory, int materialGroupId) {
 
 		MaterialGroupIcon materialGroupIcon = _materialGroupIcons.get(materialGroupId);
 
-		// TODO MIN MAX BESCHREIBEN _minSubPosition _maxSubPosition
+		HashSet<Integer> positions = new HashSet<Integer>();
 
 		int[] materialIconIds = materialGroupIcon.GetMaterialIconIds();
 
@@ -120,19 +103,31 @@ public class MaterialGroupIcons {
 			int uniqueId = materialIcon.GetUniqueId();
 			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(materialIcon.GetUniqueId());
 
-			@SuppressWarnings("deprecation")
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(materialGroupIcon.GetDisplayName());
+			itemMeta.setDisplayName(materialIcon.GetDisplayName());
 			itemStack.setItemMeta(itemMeta);
 
 			// Important!!! Metadata only in the return value
-			itemStack = ItemMetadata.setMetadata(itemStack, "P", perspectiveId);
-			itemStack = ItemMetadata.setMetadata(itemStack, "T", TypeIds.Material);
-			itemStack = ItemMetadata.setMetadata(itemStack, "U", uniqueId);
+			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, TypeIds.Material);
+			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.UniqueIdMetaData, uniqueId);
+
+			int position = materialIcon.GetPosition();
+			positions.add(position);
 
 			inventory.setItem(materialIcon.GetPosition(), itemStack);
+		}
+
+		// Erase unused slots
+		for (int i = _minSubPosition; i <= _maxSubPosition; i++) {
+
+			if (!positions.contains(i)) {
+				PrintHelp.Print("remove " + i);
+				ItemStack itemstack = inventory.getItem(i);
+				inventory.remove(itemstack);
+			}
+
 		}
 
 	}
