@@ -1,4 +1,4 @@
-package de.luke.naruto;
+package de.luke.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

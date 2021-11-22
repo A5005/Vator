@@ -1,22 +1,22 @@
 package de.luke.naruto.constantData.Collections;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
-import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.BaseIcon;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
-import de.luke.naruto.constantData.Items.WeaponIcon;
-import de.luke.naruto.tools.ItemMetadata;
+import de.luke.naruto.database.NarutoDataBase;
 
 public class MaterialIcons {
 
@@ -24,6 +24,8 @@ public class MaterialIcons {
 	private static HashMap<Material, MaterialIcon> _mcMaterialDict;
 
 	private static boolean _isInit = false;
+	public static final String TableName = "Material";
+	public static final String UuidName = "ID";
 
 	public static void Create() {
 
@@ -31,66 +33,67 @@ public class MaterialIcons {
 		_mcMaterialDict = new HashMap<Material, MaterialIcon>();
 
 		// CommonMat
-		AddIcon(UniqueIds.Stick, UniqueIds.CommonMat, 18, "§f§lStick", "A1");
-		AddIcon(UniqueIds.WoodenBtn, UniqueIds.CommonMat, 19, "§f§lWooden Button", "A2");
-		AddIcon(UniqueIds.StoneBtn, UniqueIds.CommonMat, 20, "§f§lStone Button", "A3");
+		AddIcon(UniqueIds.Stick, UniqueIds.CommonMat, 18, "Stick", "A1", ChatColor.WHITE);
+		AddIcon(UniqueIds.WoodenBtn, UniqueIds.CommonMat, 19, "Wooden Button", "A2", ChatColor.WHITE);
+		AddIcon(UniqueIds.StoneBtn, UniqueIds.CommonMat, 20, "Stone Button", "A3", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.WoodenPresPlate, UniqueIds.CommonMat, 21, "§f§lWooden Pressure Plate", "A4");
-		AddIcon(UniqueIds.StonePresPlate, UniqueIds.CommonMat, 22, "§f§lStone Pressure Plate", "A5");
-		AddIcon(UniqueIds.Feather, UniqueIds.CommonMat, 23, "§f§lFeather", "A6");
+		AddIcon(UniqueIds.WoodenPresPlate, UniqueIds.CommonMat, 21, "Wooden Pressure Plate", "A4", ChatColor.WHITE);
+		AddIcon(UniqueIds.StonePresPlate, UniqueIds.CommonMat, 22, "Stone Pressure Plate", "A5", ChatColor.WHITE);
+		AddIcon(UniqueIds.Feather, UniqueIds.CommonMat, 23, "Feather", "A6", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.Leather, UniqueIds.CommonMat, 24, "§f§lLeather", "A7");
-		AddIcon(UniqueIds.Paper, UniqueIds.CommonMat, 25, "§f§lPaper", "A8");
-		AddIcon(UniqueIds.Book, UniqueIds.CommonMat, 26, "§f§lBook", "A9");
+		AddIcon(UniqueIds.Leather, UniqueIds.CommonMat, 24, "Leather", "A7", ChatColor.WHITE);
+		AddIcon(UniqueIds.Paper, UniqueIds.CommonMat, 25, "Paper", "A8", ChatColor.WHITE);
+		AddIcon(UniqueIds.Book, UniqueIds.CommonMat, 26, "Book", "A9", ChatColor.WHITE);
 
 		// UnCommonMat
-		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "§f§lStick", "B1");
-		AddIcon(UniqueIds.Bone, UniqueIds.UnCommonMat, 19, "§f§lWooden Button", "B2");
-		AddIcon(UniqueIds.Brick, UniqueIds.UnCommonMat, 20, "§f§lStone Button", "B3");
+		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "Stick", "B1", ChatColor.WHITE);
+		AddIcon(UniqueIds.Bone, UniqueIds.UnCommonMat, 19, "Wooden Button", "B2", ChatColor.WHITE);
+		AddIcon(UniqueIds.Brick, UniqueIds.UnCommonMat, 20, "Stone Button", "B3", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.NeBrick, UniqueIds.UnCommonMat, 21, "§f§lNether Brick", "B4");
-		AddIcon(UniqueIds.Clay, UniqueIds.UnCommonMat, 22, "§f§lClay", "B5");
-		AddIcon(UniqueIds.Coal, UniqueIds.UnCommonMat, 23, "§f§lCoal", "B6");
+		AddIcon(UniqueIds.NeBrick, UniqueIds.UnCommonMat, 21, "Nether Brick", "B4", ChatColor.WHITE);
+		AddIcon(UniqueIds.Clay, UniqueIds.UnCommonMat, 22, "Clay", "B5", ChatColor.WHITE);
+		AddIcon(UniqueIds.Coal, UniqueIds.UnCommonMat, 23, "Coal", "B6", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.Flint, UniqueIds.UnCommonMat, 24, "§f§lFlint", "B7");
-		AddIcon(UniqueIds.Creeper, UniqueIds.UnCommonMat, 25, "§f§lCreeper", "B8");
-		AddIcon(UniqueIds.Compass, UniqueIds.UnCommonMat, 26, "§f§lCompass", "B9");
+		AddIcon(UniqueIds.Flint, UniqueIds.UnCommonMat, 24, "Flint", "B7", ChatColor.WHITE);
+		AddIcon(UniqueIds.Creeper, UniqueIds.UnCommonMat, 25, "Creeper", "B8", ChatColor.WHITE);
+		AddIcon(UniqueIds.Compass, UniqueIds.UnCommonMat, 26, "Compass", "B9", ChatColor.WHITE);
 
 		// RareMat
-		AddIcon(UniqueIds.Spider, UniqueIds.RareMat, 18, "§f§lMob Eye", "C1");
-		AddIcon(UniqueIds.Glowstone, UniqueIds.RareMat, 19, "§f§lGlowstone", "C2");
-		AddIcon(UniqueIds.Quartz, UniqueIds.RareMat, 20, "§f§lQuartz", "C3");
+		AddIcon(UniqueIds.Spider, UniqueIds.RareMat, 18, "Mob Eye", "C1", ChatColor.WHITE);
+		AddIcon(UniqueIds.Glowstone, UniqueIds.RareMat, 19, "Glowstone", "C2", ChatColor.WHITE);
+		AddIcon(UniqueIds.Quartz, UniqueIds.RareMat, 20, "Quartz", "C3", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.Cream, UniqueIds.RareMat, 21, "§f§lMagma Cream", "C4");
-		AddIcon(UniqueIds.Iron, UniqueIds.RareMat, 22, "§f§lIron", "C5");
-		AddIcon(UniqueIds.Gold, UniqueIds.RareMat, 23, "§f§lGold", "C6");
+		AddIcon(UniqueIds.Cream, UniqueIds.RareMat, 21, "Magma Cream", "C4", ChatColor.WHITE);
+		AddIcon(UniqueIds.Iron, UniqueIds.RareMat, 22, "Iron", "C5", ChatColor.WHITE);
+		AddIcon(UniqueIds.Gold, UniqueIds.RareMat, 23, "Gold", "C6", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.PrisShard, UniqueIds.RareMat, 24, "§f§lPrismarine Shard", "C7");
-		AddIcon(UniqueIds.PrisCrystal, UniqueIds.RareMat, 25, "§f§lPrismarine Crystal", "C8");
-		AddIcon(UniqueIds.Watch, UniqueIds.RareMat, 26, "§f§lClock", "C9");
+		AddIcon(UniqueIds.PrisShard, UniqueIds.RareMat, 24, "Prismarine Shard", "C7", ChatColor.WHITE);
+		AddIcon(UniqueIds.PrisCrystal, UniqueIds.RareMat, 25, "Prismarine Crystal", "C8", ChatColor.WHITE);
+		AddIcon(UniqueIds.Watch, UniqueIds.RareMat, 26, "Clock", "C9", ChatColor.WHITE);
 
 		// EpicMat
-		AddIcon(UniqueIds.Ferm, UniqueIds.EpicMat, 18, "§f§lSpecial Mob Eye", "D1");
-		AddIcon(UniqueIds.Tear, UniqueIds.EpicMat, 19, "§f§lGhast Tear", "D2");
-		AddIcon(UniqueIds.Blaze, UniqueIds.EpicMat, 20, "§f§lBlaze Powder", "D3");
+		AddIcon(UniqueIds.Ferm, UniqueIds.EpicMat, 18, "Special Mob Eye", "D1", ChatColor.WHITE);
+		AddIcon(UniqueIds.Tear, UniqueIds.EpicMat, 19, "Ghast Tear", "D2", ChatColor.WHITE);
+		AddIcon(UniqueIds.Blaze, UniqueIds.EpicMat, 20, "Blaze Powder", "D3", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.Slime, UniqueIds.EpicMat, 21, "§f§lSlimeball", "D4");
-		AddIcon(UniqueIds.Ender, UniqueIds.EpicMat, 22, "§f§lEye of Ender", "D5");
-		AddIcon(UniqueIds.Diamond, UniqueIds.EpicMat, 23, "§f§lDiamond", "D6");
+		AddIcon(UniqueIds.Slime, UniqueIds.EpicMat, 21, "Slimeball", "D4", ChatColor.WHITE);
+		AddIcon(UniqueIds.Ender, UniqueIds.EpicMat, 22, "Eye of Ender", "D5", ChatColor.WHITE);
+		AddIcon(UniqueIds.Diamond, UniqueIds.EpicMat, 23, "Diamond", "D6", ChatColor.WHITE);
 
-		AddIcon(UniqueIds.Emerald, UniqueIds.EpicMat, 24, "§f§lEmerald", "D6");
-		AddIcon(UniqueIds.Bottle, UniqueIds.EpicMat, 25, "§f§lEnchanting Bottle", "D7");
-		AddIcon(UniqueIds.Star, UniqueIds.EpicMat, 26, "§f§lNether Star", "D8");
+		AddIcon(UniqueIds.Emerald, UniqueIds.EpicMat, 24, "Emerald", "D7", ChatColor.WHITE);
+		AddIcon(UniqueIds.Bottle, UniqueIds.EpicMat, 25, "Enchanting Bottle", "D8", ChatColor.WHITE);
+		AddIcon(UniqueIds.Star, UniqueIds.EpicMat, 26, "Nether Star", "D9", ChatColor.WHITE);
 
 		_isInit = true;
 	}
 
-	private static void AddIcon(int uniqueId, int materialGroupId, int position, String displayName, String dbAccessName) {
+	private static void AddIcon(int uniqueId, int materialGroupId, int position, String displayName, String dbAccessName, ChatColor chatColor) {
 
-		MaterialIcon materialIcon = new MaterialIcon(uniqueId, materialGroupId, position, displayName, dbAccessName);
+		MaterialIcon materialIcon = new MaterialIcon(uniqueId, materialGroupId, position, displayName, dbAccessName, chatColor);
 		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
 		_materialIcons.put(uniqueId, materialIcon);
 		_mcMaterialDict.put(materialInfo.GetMaterial(), materialIcon);
+
 	}
 
 	public static boolean GetIsInit() {
@@ -140,6 +143,58 @@ public class MaterialIcons {
 
 		for (HashMap.Entry<Integer, MaterialIcon> entry : _materialIcons.entrySet()) {
 			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		}
+	}
+
+	public static String DbSetAllAmountsToValue(String uuid, int value) {
+
+		String uuidString = uuid.toString();
+		StringBuilder sb = new StringBuilder();
+		StringBuilder sbValues = new StringBuilder();
+		sbValues.append(String.format("VALUES (\"%s\"", uuidString));
+
+		sb.append(String.format("INSERT INTO `%s`(`%s`", TableName, UuidName));
+
+		_materialIcons.entrySet().forEach(entry -> {
+
+			MaterialIcon materialIcon = entry.getValue();
+			sb.append(String.format(",`%s`", materialIcon.GetDbAccessName()));
+			sbValues.append(String.format(",%s", value));
+
+		});
+
+		sbValues.append(")");
+		sb.append(") ");
+		sb.append(sbValues.toString());
+		String sqlCommand = sb.toString();
+
+		return sqlCommand;
+
+	}
+
+	public static void DbReadAllAmounts(UUID uuid) throws SQLException {
+
+		String sqlString = String.format("SELECT * FROM `%s` WHERE ID = '%s'", TableName, uuid.toString());
+
+		PreparedStatement st = NarutoDataBase.mysql.getConnection().prepareStatement(sqlString);
+		ResultSet rs = st.executeQuery();
+
+		while (rs.next()) {
+
+			_materialIcons.entrySet().forEach(entry -> {
+
+				MaterialIcon materialIcon = entry.getValue();
+
+				try {
+					int amount = rs.getInt(materialIcon.GetDbAccessName());
+					System.out.println(materialIcon.GetDisplayName() + " " + amount);
+				} catch (SQLException e) {
+					//
+					e.printStackTrace();
+				}
+
+			});
+
 		}
 	}
 

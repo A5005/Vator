@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.BaseIcon;
-import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.WeaponIcon;
 
 public class WeaponIcons extends BaseIcons {
@@ -32,7 +32,7 @@ public class WeaponIcons extends BaseIcons {
 		};
 
 		// CommonWeap
-		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "§f§lThrowing Knife", "number", costs);
+		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "§f§lThrowing Knife", "number", costs, ChatColor.WHITE);
 
 		costs = new HashMap<Integer, Integer>() {
 			{
@@ -41,7 +41,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "§f§lThrowing Axe", "number", costs);
+		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
 
 		// UnCommonWeap
 
@@ -53,7 +53,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "§f§lThrowing Axe", "number", costs);
+		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
 
 		// RareWeap
 		costs = new HashMap<Integer, Integer>() {
@@ -65,7 +65,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "§f§lThrowing Axe", "number", costs);
+		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
 
 		// LegendWeap
 		costs = new HashMap<Integer, Integer>() {
@@ -78,7 +78,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "§f§lThrowing Axe", "number", costs);
+		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
 
 		_isInit = true;
 	}
@@ -87,9 +87,9 @@ public class WeaponIcons extends BaseIcons {
 		return _isInit;
 	}
 
-	private static void AddIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, HashMap<Integer, Integer> costs) {
+	private static void AddIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, HashMap<Integer, Integer> costs, ChatColor chatColor) {
 
-		WeaponIcon weaponIcon = new WeaponIcon(uniqueId, weaponGroupId, position, displayName, dbAccessName, costs);
+		WeaponIcon weaponIcon = new WeaponIcon(uniqueId, weaponGroupId, position, displayName, dbAccessName, costs, chatColor);
 		_weaponIcons.put(uniqueId, weaponIcon);
 	}
 
@@ -117,7 +117,7 @@ public class WeaponIcons extends BaseIcons {
 	public static BaseIcon GetBaseIconFromId(int uniqueId) {
 		return _weaponIcons.get(uniqueId);
 	}
-	
+
 	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId) {
 
 		BaseIcon baseIcon = GetBaseIconFromId(uniqueId);

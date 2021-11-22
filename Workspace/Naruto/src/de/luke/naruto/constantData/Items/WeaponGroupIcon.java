@@ -1,30 +1,16 @@
 package de.luke.naruto.constantData.Items;
 
-public class WeaponGroupIcon {
+import org.bukkit.ChatColor;
 
-	private int _uniqueId;
-	private int _position;
-	private String _displayName;
+public class WeaponGroupIcon extends BaseIcon {
+
 	private int[] _weaponIconIds;
 
-	public WeaponGroupIcon(int uniqueId, int position, String displayName, String dbAccessName, int[] weaponIconIds) {
+	public WeaponGroupIcon(int uniqueId, int position, String displayName, String dbAccessName, int[] weaponIconIds, ChatColor chatColor) {
 
-		_uniqueId = uniqueId;
+		super(uniqueId, position, displayName, dbAccessName, chatColor);
 		_weaponIconIds = weaponIconIds;
-		_displayName = displayName;
-		_position = position;
-	}
 
-	public int GetUniqueId() {
-		return _uniqueId;
-	}
-
-	public int GetPosition() {
-		return _position;
-	}
-	
-	public String GetDisplayName() {
-		return _displayName;
 	}
 
 	public int[] GetWeaponIconIds() {

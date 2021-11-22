@@ -2,6 +2,7 @@ package de.luke.naruto.constantData.Collections;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,7 +11,6 @@ import org.bukkit.material.MaterialData;
 import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.BaseIcon;
-import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.tools.ItemMetadata;
 
@@ -22,14 +22,14 @@ public class BaseIcons {
 	public static void Create() {
 		_baseIcons = new HashMap<Integer, BaseIcon>();
 
-		AddIcon(UniqueIds.Workbench, 0, "§f§lWorkbench", "");
-		AddIcon(UniqueIds.GreenWool, 0, "§f§lWool", "");
-		AddIcon(UniqueIds.Barrier, 0, "§f§lBack", "");
+		AddIcon(UniqueIds.Workbench, 0, "§f§lWorkbench", "", ChatColor.WHITE);
+		AddIcon(UniqueIds.GreenWool, 0, "§f§lWool", "", ChatColor.WHITE);
+		AddIcon(UniqueIds.Barrier, 0, "§f§lBack", "", ChatColor.WHITE);
 	}
 
-	private static void AddIcon(int uniqueId, int position, String displayName, String dbAccessName) {
+	private static void AddIcon(int uniqueId, int position, String displayName, String dbAccessName, ChatColor chatColor) {
 
-		BaseIcon baseIcon = new BaseIcon(uniqueId, position, displayName, dbAccessName);
+		BaseIcon baseIcon = new BaseIcon(uniqueId, position, displayName, dbAccessName, chatColor);
 		_baseIcons.put(uniqueId, baseIcon);
 	}
 

@@ -1,8 +1,6 @@
-package de.luke.naruto;
+package de.luke.listener;
 
 import de.luke.weapons.WeaponHelix;
-import de.luke.weapons.WeaponLinear;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

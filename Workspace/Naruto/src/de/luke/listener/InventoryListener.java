@@ -1,4 +1,4 @@
-package de.luke.naruto;
+package de.luke.listener;
 
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -13,10 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import de.luke.naruto.Perspectives.CraftingPerspective;
 import de.luke.naruto.Perspectives.MainPerspective;
 import de.luke.naruto.constantData.Ids.MetaDataIds;
-import de.luke.naruto.constantData.Ids.PerspectiveIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.tools.ItemMetadata;
-import de.luke.naruto.tools.PrintHelp;
+
 
 public class InventoryListener implements Listener {
 

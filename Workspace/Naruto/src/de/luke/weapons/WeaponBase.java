@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 
-import org.bukkit.entity.Damageable;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

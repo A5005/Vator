@@ -3,6 +3,7 @@ package de.luke.naruto.constantData.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,9 +12,6 @@ import org.bukkit.material.MaterialData;
 import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.constantData.Ids.UniqueIds;
-import de.luke.naruto.constantData.Items.BaseIcon;
-import de.luke.naruto.constantData.Items.MaterialGroupIcon;
-import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.constantData.Items.WeaponGroupIcon;
 import de.luke.naruto.constantData.Items.WeaponIcon;
@@ -37,19 +35,19 @@ public class WeaponGroupIcons {
 
 		_weaponGroupIcons = new HashMap<Integer, WeaponGroupIcon>();
 		_positions = new HashMap<Integer, WeaponGroupIcon>();
-		AddIcon(UniqueIds.CommonWeap, 4, "§f§lCommon Weapons", "Materialnumber");
-		AddIcon(UniqueIds.UnCommonWeap, 5, "§2§lUncommon Weapons", "Materialnumber");
-		AddIcon(UniqueIds.RareWeap, 6, "§1§lRare Weapons", "Materialnumber");
-		AddIcon(UniqueIds.LegendWeap, 7, "§e§lLegendary Weapon", "Materialnumber");
-		AddIcon(UniqueIds.ExclusiveWeap, 8, "§4§lExclusive Weapons", "Materialnumber");
+		AddIcon(UniqueIds.CommonWeap, 4, "Common Weapons", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.UnCommonWeap, 5, "Uncommon Weapons", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.RareWeap, 6, "Rare Weapons", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.LegendWeap, 7, "Legendary Weapon", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.ExclusiveWeap, 8, "Exclusive Weapons", "Materialnumber", ChatColor.WHITE);
 
 	}
 
-	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName) throws Exception {
+	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName, ChatColor chatColor) throws Exception {
 
 		// Backward Pointer
 		int[] weaponIconIds = WeaponIcons.FindMaterialGroupIcons(materialInfoId);
-		WeaponGroupIcon weaponGroupIcon = new WeaponGroupIcon(materialInfoId, position, displayName, dbAccessName, weaponIconIds);
+		WeaponGroupIcon weaponGroupIcon = new WeaponGroupIcon(materialInfoId, position, displayName, dbAccessName, weaponIconIds, chatColor);
 		_weaponGroupIcons.put(materialInfoId, weaponGroupIcon);
 
 		if (!_positions.containsKey(position))
@@ -135,8 +133,5 @@ public class WeaponGroupIcons {
 		return _positions.get(position);
 
 	}
-	
-	
-
 
 }

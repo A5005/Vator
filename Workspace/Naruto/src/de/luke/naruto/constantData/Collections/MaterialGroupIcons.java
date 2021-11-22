@@ -3,7 +3,6 @@ package de.luke.naruto.constantData.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,7 +15,6 @@ import de.luke.naruto.constantData.Items.MaterialGroupIcon;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.tools.ItemMetadata;
-import de.luke.naruto.tools.PrintHelp;
 
 public class MaterialGroupIcons {
 

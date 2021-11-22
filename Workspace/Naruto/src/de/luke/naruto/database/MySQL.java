@@ -6,21 +6,21 @@ import java.sql.SQLException;
 
 public class MySQL {
 
-	private Connection con;
+	private Connection _con;
 
-	private String host;
-	private int port;
-	private String database;
-	private String user;
-	private String password;
+	private String _host;
+	private int _port;
+	private String _database;
+	private String _user;
+	private String _password;
 
 	public MySQL(String host, int port, String database, String user, String password) {
 
-		this.host = host;
-		this.port = port;
-		this.database = database;
-		this.user = user;
-		this.password = password;
+		this._host = host;
+		this._port = port;
+		this._database = database;
+		this._user = user;
+		this._password = password;
 
 		connect();
 
@@ -29,7 +29,7 @@ public class MySQL {
 	public void connect() {
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true", user, password);
+			_con = DriverManager.getConnection("jdbc:mysql://" + _host + ":" + _port + "/" + _database + "?autoReconnect=true", _user, _password);
 
 			System.out.println("MySQL connected");
 
@@ -40,11 +40,13 @@ public class MySQL {
 
 	}
 
+	
+
 	public void disconnect() {
 
 		try {
 			if (this.hasConnection()) {
-				this.con.close();
+				this._con.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -52,7 +54,7 @@ public class MySQL {
 	}
 
 	public boolean hasConnection() {
-		if (this.con != null) {
+		if (this._con != null) {
 			return true;
 		}
 		return false;
@@ -60,7 +62,7 @@ public class MySQL {
 
 	public void UpdateConnection() throws SQLException {
 
-		if (con.isValid(0) == false) {
+		if (_con.isValid(0) == false) {
 
 			disconnect();
 			connect();
@@ -70,16 +72,16 @@ public class MySQL {
 	}
 
 	public Connection getConnection() throws SQLException {
-		if (con.isValid(0) == false) {
+		if (_con.isValid(0) == false) {
 
 			disconnect();
 			connect();
 
 		}
-		return this.con;
+		return this._con;
 	}
 
 	public Connection getSafeConnection() {
-		return this.con;
+		return this._con;
 	}
 }

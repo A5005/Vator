@@ -3,15 +3,11 @@ package de.luke.naruto.Perspectives;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import de.luke.naruto.constantData.Collections.MaterialGroupIcons;
 import de.luke.naruto.constantData.Collections.WeaponGroupIcons;
-import de.luke.naruto.constantData.Ids.PerspectiveIds;
-import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.constantData.Items.MaterialGroupIcon;
-import de.luke.naruto.tools.ItemMetadata;
-import de.luke.naruto.tools.PrintHelp;
+
 
 public class MainPerspective {
 

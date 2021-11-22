@@ -1,6 +1,7 @@
-package de.luke.naruto;
+package de.luke.commands;
 
-import java.util.HashMap;
+
+import java.sql.SQLException;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -9,11 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import de.luke.naruto.Perspectives.MainPerspective;
 import de.luke.naruto.constantData.Collections.MaterialIcons;
 import de.luke.naruto.constantData.Items.MaterialIcon;
+
 
 public class ClaimCommand implements CommandExecutor {
 
@@ -42,6 +41,13 @@ public class ClaimCommand implements CommandExecutor {
 			int amount = itemStack.getAmount();
 			System.out.println(material + ": " + amount);
 
+		}
+
+		try {
+			MaterialIcons.DbReadAllAmounts(player.getUniqueId());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return true;
