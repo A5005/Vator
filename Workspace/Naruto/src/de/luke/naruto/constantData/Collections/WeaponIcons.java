@@ -32,7 +32,7 @@ public class WeaponIcons extends BaseIcons {
 		};
 
 		// CommonWeap
-		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "§f§lThrowing Knife", "number", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "Throwing Knife", "number", costs, ChatColor.WHITE);
 
 		costs = new HashMap<Integer, Integer>() {
 			{
@@ -41,7 +41,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		// UnCommonWeap
 
@@ -53,7 +53,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		// RareWeap
 		costs = new HashMap<Integer, Integer>() {
@@ -65,7 +65,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		// LegendWeap
 		costs = new HashMap<Integer, Integer>() {
@@ -78,7 +78,7 @@ public class WeaponIcons extends BaseIcons {
 			}
 		};
 
-		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "§f§lThrowing Axe", "number", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		_isInit = true;
 	}

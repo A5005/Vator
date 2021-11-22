@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,7 +147,7 @@ public class MaterialIcons {
 		}
 	}
 
-	public static String DbSetAllAmountsToValue(String uuid, int value) {
+	public static void DbSetAllAmountsToValue(UUID uuid, int value) throws SQLException {
 
 		String uuidString = uuid.toString();
 		StringBuilder sb = new StringBuilder();
@@ -166,18 +167,20 @@ public class MaterialIcons {
 		sbValues.append(")");
 		sb.append(") ");
 		sb.append(sbValues.toString());
-		String sqlCommand = sb.toString();
 
-		return sqlCommand;
+		PreparedStatement preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(sb.toString());
+		preparedStatement.execute();
 
 	}
 
-	public static void DbReadAllAmounts(UUID uuid) throws SQLException {
+	public static HashMap<Material, Integer> DbReadAllAmounts(UUID uuid) throws SQLException {
 
 		String sqlString = String.format("SELECT * FROM `%s` WHERE ID = '%s'", TableName, uuid.toString());
 
 		PreparedStatement st = NarutoDataBase.mysql.getConnection().prepareStatement(sqlString);
 		ResultSet rs = st.executeQuery();
+
+		HashMap<Material, Integer> amounts = new HashMap<Material, Integer>();
 
 		while (rs.next()) {
 
@@ -187,15 +190,51 @@ public class MaterialIcons {
 
 				try {
 					int amount = rs.getInt(materialIcon.GetDbAccessName());
-					System.out.println(materialIcon.GetDisplayName() + " " + amount);
+					amounts.put(materialIcon.GetMaterialInfo().GetMaterial(), amount);
+					System.out.println("DB EXISTING: " + materialIcon.GetDisplayName() + " " + amount);
 				} catch (SQLException e) {
 					//
 					e.printStackTrace();
 				}
 
 			});
+		}
+
+		return amounts;
+	}
+
+	public static void DbWriteAmounts(HashMap<MaterialIcon, Integer> amounts, UUID uuid) throws SQLException {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("UPDATE `%s` SET ", TableName));
+
+		boolean firstEnty = true;
+
+		for (HashMap.Entry<MaterialIcon, Integer> entry : amounts.entrySet()) {
+
+			MaterialIcon materialIcon = entry.getKey();
+			int amount = entry.getValue();
+
+			if (firstEnty) {
+				sb.append(String.format("`%s`=%d", materialIcon.GetDbAccessName(), amount));
+				firstEnty = false;
+			} else {
+				sb.append(String.format(",`%s`=%d", materialIcon.GetDbAccessName(), amount));
+			}
 
 		}
+
+		if (firstEnty) {
+			// Nothing to do
+			return;
+		}
+
+		sb.append(String.format(" WHERE `id`=\"%s\"", uuid.toString()));
+		System.out.println(sb.toString());
+
+		PreparedStatement preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(sb.toString());
+		preparedStatement.execute();
+
 	}
 
 }

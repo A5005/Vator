@@ -1,7 +1,8 @@
 package de.luke.commands;
 
-
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -13,19 +14,28 @@ import org.bukkit.inventory.ItemStack;
 import de.luke.naruto.constantData.Collections.MaterialIcons;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 
-
 public class ClaimCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		if (!(sender instanceof Player))
-			return true;
+			return false;
 
 		Player player = (Player) sender;
 		Inventory inventory = player.getInventory();
 
-		// TODO DATABASE READ CURRENT AMOUNTS
+		HashMap<Material, Integer> dbAmounts;
+		HashMap<MaterialIcon, Integer> newAmounts = new HashMap<MaterialIcon, Integer>();
+
+		try {
+			dbAmounts = MaterialIcons.DbReadAllAmounts(player.getUniqueId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		ArrayList<ItemStack> itemStacksToRemove = new ArrayList<ItemStack>();
 
 		for (ItemStack itemStack : inventory) {
 
@@ -38,15 +48,35 @@ public class ClaimCommand implements CommandExecutor {
 			if (materialIcon == null)
 				continue;
 
-			int amount = itemStack.getAmount();
-			System.out.println(material + ": " + amount);
+			int stackAmount = itemStack.getAmount();
+
+			if (newAmounts.containsKey(materialIcon)) {
+				int existingAmount = newAmounts.get(materialIcon);
+				newAmounts.put(materialIcon, existingAmount + stackAmount);
+			} else {
+				// add database amount only once!
+				int dbAmount = dbAmounts.get(material);
+				System.out.println(String.format("AddDbAmount %s  dbAmount: %d", material.toString(), dbAmount));
+				newAmounts.put(materialIcon, dbAmount + stackAmount);
+			}
+
+			itemStacksToRemove.add(itemStack);
+
+			System.out.println(String.format("material: %s | stackAmount: %d", material.toString(), stackAmount));
 
 		}
 
+		for (ItemStack itemStack : itemStacksToRemove) {
+			inventory.remove(itemStack);
+		}
+
+		for (HashMap.Entry<MaterialIcon, Integer> entry : newAmounts.entrySet()) {
+			System.out.println("Material = " + entry.getKey().GetDisplayName() + "," + "Count = " + entry.getValue());
+		}
+
 		try {
-			MaterialIcons.DbReadAllAmounts(player.getUniqueId());
+			MaterialIcons.DbWriteAmounts(newAmounts, player.getUniqueId());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

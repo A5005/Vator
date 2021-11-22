@@ -2,6 +2,8 @@ package de.luke.naruto.constantData.Items;
 
 import org.bukkit.ChatColor;
 
+import de.luke.naruto.constantData.Collections.MaterialInfos;
+
 public class BaseIcon {
 
 	private int _uniqueId;
@@ -41,6 +43,11 @@ public class BaseIcon {
 
 	public ChatColor GetChatColor() {
 		return _chatColor;
+	}
+	
+	public MaterialInfo GetMaterialInfo()
+	{
+		return MaterialInfos.GetMaterialItem(_uniqueId);
 	}
 
 }

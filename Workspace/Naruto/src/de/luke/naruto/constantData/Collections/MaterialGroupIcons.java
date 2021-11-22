@@ -3,6 +3,7 @@ package de.luke.naruto.constantData.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -35,14 +36,14 @@ public class MaterialGroupIcons {
 		_materialGroupIcons = new HashMap<Integer, MaterialGroupIcon>();
 		_positions = new HashMap<Integer, MaterialGroupIcon>();
 
-		AddIcon(UniqueIds.CommonMat, 0, "§7§lCommon Materials", "Materialnumber");
-		AddIcon(UniqueIds.UnCommonMat, 1, "§a§lUncommon Materials", "Materialnumber");
-		AddIcon(UniqueIds.RareMat, 2, "§3§lRare Materials", "Materialnumber");
-		AddIcon(UniqueIds.EpicMat, 3, "§5§lEpic Materials", "Materialnumber");
+		AddIcon(UniqueIds.CommonMat, 0, "Common Materials", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.UnCommonMat, 1, "Uncommon Materials", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.RareMat, 2, "Rare Materials", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.EpicMat, 3, "Epic Materials", "Materialnumber", ChatColor.WHITE);
 
 	}
 
-	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName) throws Exception {
+	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName, ChatColor chatColor) throws Exception {
 
 		// Backward Pointer
 		int[] materialIconIds = MaterialIcons.FindMaterialGroupIcons(materialInfoId);

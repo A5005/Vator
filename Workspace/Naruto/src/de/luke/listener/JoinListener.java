@@ -21,7 +21,6 @@ public class JoinListener implements Listener {
 		Player player = event.getPlayer();
 
 		if (!isInDatabase(MaterialIcons.TableName, player.getUniqueId())) {
-			System.out.println("InitMatarial");
 			InitMatarial(player);
 		}
 
@@ -42,14 +41,7 @@ public class JoinListener implements Listener {
 
 	private void InitMatarial(Player player) throws SQLException {
 
-		String sqlString = MaterialIcons.DbSetAllAmountsToValue(player.getUniqueId().toString(), 0);
-		PreparedStatement preparedStatement;
-
-		preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(sqlString);
-		preparedStatement.execute();
-
+		MaterialIcons.DbSetAllAmountsToValue(player.getUniqueId(), 0);
 	}
-
-	
 
 }
