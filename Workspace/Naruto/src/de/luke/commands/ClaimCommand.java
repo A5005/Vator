@@ -56,13 +56,13 @@ public class ClaimCommand implements CommandExecutor {
 			} else {
 				// add database amount only once!
 				int dbAmount = dbAmounts.get(material);
-				System.out.println(String.format("AddDbAmount %s  dbAmount: %d", material.toString(), dbAmount));
+				//System.out.println(String.format("AddDbAmount %s  dbAmount: %d", material.toString(), dbAmount));
 				newAmounts.put(materialIcon, dbAmount + stackAmount);
 			}
 
 			itemStacksToRemove.add(itemStack);
 
-			System.out.println(String.format("material: %s | stackAmount: %d", material.toString(), stackAmount));
+			//System.out.println(String.format("material: %s | stackAmount: %d", material.toString(), stackAmount));
 
 		}
 
@@ -70,9 +70,12 @@ public class ClaimCommand implements CommandExecutor {
 			inventory.remove(itemStack);
 		}
 
+		/*
 		for (HashMap.Entry<MaterialIcon, Integer> entry : newAmounts.entrySet()) {
 			System.out.println("Material = " + entry.getKey().GetDisplayName() + "," + "Count = " + entry.getValue());
 		}
+		*/
+		
 
 		try {
 			MaterialIcons.DbSetSpecificAmounts(newAmounts, player.getUniqueId());

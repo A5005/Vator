@@ -27,7 +27,6 @@ public class MaterialIcons {
 
 	private static boolean _isInit = false;
 	public static final String TableName = "Material";
-	public static final String UuidName = "ID";
 
 	public static void Create() {
 
@@ -155,7 +154,7 @@ public class MaterialIcons {
 		StringBuilder sbValues = new StringBuilder();
 		sbValues.append(String.format("VALUES (\"%s\"", uuidString));
 
-		sb.append(String.format("INSERT INTO `%s`(`%s`", TableName, UuidName));
+		sb.append(String.format("INSERT INTO `%s`(`%s`", TableName, "ID"));
 
 		_materialIcons.entrySet().forEach(entry -> {
 
@@ -262,8 +261,8 @@ public class MaterialIcons {
 			return;
 		}
 
-		sb.append(String.format(" WHERE `id`=\"%s\"", uuid.toString()));
-		System.out.println(sb.toString());
+		sb.append(String.format(" WHERE `ID`=\"%s\"", uuid.toString()));
+		// System.out.println(sb.toString());
 
 		PreparedStatement preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(sb.toString());
 		preparedStatement.execute();
@@ -290,7 +289,7 @@ public class MaterialIcons {
 
 		}
 
-		sb.append(String.format(" FROM `%s` WHERE `id`=\"%s\"", TableName, uuid.toString()));
+		sb.append(String.format(" FROM `%s` WHERE `ID`=\"%s\"", TableName, uuid.toString()));
 
 		HashMap<MaterialIcon, Integer> result = new HashMap<MaterialIcon, Integer>();
 

@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import de.luke.naruto.constantData.Collections.MaterialIcons;
+import de.luke.naruto.constantData.Collections.WeaponIcons;
 import de.luke.naruto.database.NarutoDataBase;
 
 public class JoinListener implements Listener {
@@ -19,10 +20,13 @@ public class JoinListener implements Listener {
 	public void onPlayerFirstJoin(PlayerJoinEvent event) throws SQLException {
 
 		Player player = event.getPlayer();
+		UUID uuid = player.getUniqueId();
 
-		if (!isInDatabase(MaterialIcons.TableName, player.getUniqueId())) {
-			InitMatarial(player);
-		}
+		if (!isInDatabase(MaterialIcons.TableName, uuid))
+			MaterialIcons.DbSetAllAmountsToValue(uuid, 0);
+
+		if (!isInDatabase(WeaponIcons.TableName, uuid))
+			WeaponIcons.DbSetAllAmountsToValue(uuid, 0);
 
 	}
 
@@ -37,11 +41,6 @@ public class JoinListener implements Listener {
 		}
 		return false;
 
-	}
-
-	private void InitMatarial(Player player) throws SQLException {
-
-		MaterialIcons.DbSetAllAmountsToValue(player.getUniqueId(), 0);
 	}
 
 }

@@ -68,7 +68,6 @@ public class InventoryListener implements Listener {
 			break;
 
 		case TypeIds.WorkBenchIcon:
-			PrintHelp.Print("WorkBenchIcon " + uniqueIdMetaData);
 			CraftingPerspective.Craft(player, clickedInventory);
 			break;
 

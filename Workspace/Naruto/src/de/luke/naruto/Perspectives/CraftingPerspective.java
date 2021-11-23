@@ -41,7 +41,7 @@ public class CraftingPerspective {
 
 		UUID uuid = player.getUniqueId();
 
-		WeaponIcons.AddToInventory(inventory, weaponId, weaponPosition, TypeIds.CraftWeaponIcon, null);
+		UpdateWeaponIcon(inventory, weaponId, weaponIcon, uuid);
 		UpdateCraftIcon(inventory, weaponId, weaponIcon, uuid);
 		BaseIcons.AddToInventory(inventory, UniqueIds.Barrier, 27, TypeIds.BackIcon, null);
 		BaseIcons.AddToInventory(inventory, UniqueIds.GreenWool, 31, TypeIds.ClaimIcon, null);
@@ -57,15 +57,25 @@ public class CraftingPerspective {
 		BaseIcons.AddToInventory(inventory, UniqueIds.Workbench, 20, TypeIds.WorkBenchIcon, craftLore);
 	}
 
+	private static void UpdateWeaponIcon(Inventory inventory, int weaponId, WeaponIcon weaponIcon, UUID uuid) throws SQLException {
+
+		List<String> weaponLore = new ArrayList<String>();
+
+		int amount = WeaponIcons.DbGetSpecificAmount(weaponIcon, uuid);
+		weaponLore.add("§7§lYou have: §f§l" + amount);
+		WeaponIcons.AddToInventory(inventory, weaponId, weaponPosition, TypeIds.CraftWeaponIcon, weaponLore);
+	}
+
 	public static void Craft(Player player, Inventory openInventory) throws SQLException {
 
+		UUID uuid = player.getUniqueId();
 		ItemStack itemStack = openInventory.getItem(weaponPosition);
 		Material material = itemStack.getType();
 
 		WeaponIcon weaponIcon = WeaponIcons.TryGetMaterialIconFromMcMaterial(material);
 		int weaponId = weaponIcon.GetUniqueId();
+		int weaponCount = WeaponIcons.DbGetSpecificAmount(weaponIcon, uuid);
 
-		UUID uuid = player.getUniqueId();
 		List<CraftCost> craftCosts = GetCraftingCosts(weaponIcon, uuid);
 
 		for (int i = 0; i < craftCosts.size(); i++) {
@@ -73,9 +83,13 @@ public class CraftingPerspective {
 
 			int amount = crafCost.GetAmount();
 			int available = crafCost.GetAvailable();
-			/*
-			 * if (amount > available) { // cannot craft return; }
-			 */
+
+			// Too little material cannot craft
+			if (amount > available) {
+				player.sendMessage(ChatColor.RED + "Too little material cannot craft");
+				return;
+			}
+
 		}
 
 		HashMap<MaterialIcon, Integer> reducedAmounts = new HashMap<MaterialIcon, Integer>();
@@ -89,9 +103,12 @@ public class CraftingPerspective {
 			reducedAmounts.put(curMaterial, available - amount);
 		}
 
+		weaponCount++;
 		MaterialIcons.DbSetSpecificAmounts(reducedAmounts, uuid);
+		WeaponIcons.DbSetSpecificAmount(weaponIcon, weaponCount, uuid);
 
-		// TODO update weapon Count
+		// UpdateToolTips
+		UpdateWeaponIcon(openInventory, weaponId, weaponIcon, uuid);
 		UpdateCraftIcon(openInventory, weaponId, weaponIcon, uuid);
 
 	}
