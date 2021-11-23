@@ -27,3 +27,4 @@ hs_err_pid*
 # ignora quaisquer diretórios chamados "metadata"
 .metadata/
 .recommenders/
+DebugServer/
