@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.BaseIcon;
+import de.luke.naruto.constantData.Items.Cost;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.database.NarutoDataBase;
@@ -47,7 +48,7 @@ public class MaterialIcons {
 		AddIcon(UniqueIds.Book, UniqueIds.CommonMat, 26, "Book", "A9", ChatColor.WHITE);
 
 		// UnCommonMat
-		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "Stick", "B1", ChatColor.WHITE);
+		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "String", "B1", ChatColor.WHITE);
 		AddIcon(UniqueIds.Bone, UniqueIds.UnCommonMat, 19, "Wooden Button", "B2", ChatColor.WHITE);
 		AddIcon(UniqueIds.Brick, UniqueIds.UnCommonMat, 20, "Stone Button", "B3", ChatColor.WHITE);
 
@@ -137,7 +138,7 @@ public class MaterialIcons {
 	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId) {
 
 		BaseIcon baseIcon = GetBaseIconFromId(uniqueId);
-		BaseIcons.AddToInventory(baseIcon, inventory, uniqueId, position, typeId);
+		BaseIcons.AddToInventory(baseIcon, inventory, uniqueId, position, typeId, null);
 	}
 
 	public static void ListWeaponIcons() {
@@ -173,7 +174,7 @@ public class MaterialIcons {
 
 	}
 
-	public static HashMap<Material, Integer> DbReadAllAmounts(UUID uuid) throws SQLException {
+	public static HashMap<Material, Integer> DbReadAllMaterialAmounts(UUID uuid) throws SQLException {
 
 		String sqlString = String.format("SELECT * FROM `%s` WHERE ID = '%s'", TableName, uuid.toString());
 
@@ -191,7 +192,8 @@ public class MaterialIcons {
 				try {
 					int amount = rs.getInt(materialIcon.GetDbAccessName());
 					amounts.put(materialIcon.GetMaterialInfo().GetMaterial(), amount);
-					System.out.println("DB EXISTING: " + materialIcon.GetDisplayName() + " " + amount);
+					// System.out.println("DB EXISTING: " + materialIcon.GetDisplayName() + " " +
+					// amount);
 				} catch (SQLException e) {
 					//
 					e.printStackTrace();
@@ -203,7 +205,38 @@ public class MaterialIcons {
 		return amounts;
 	}
 
-	public static void DbWriteAmounts(HashMap<MaterialIcon, Integer> amounts, UUID uuid) throws SQLException {
+	public static HashMap<MaterialIcon, Integer> DbReadAllIconAmounts(UUID uuid) throws SQLException {
+
+		String sqlString = String.format("SELECT * FROM `%s` WHERE ID = '%s'", TableName, uuid.toString());
+
+		PreparedStatement st = NarutoDataBase.mysql.getConnection().prepareStatement(sqlString);
+		ResultSet rs = st.executeQuery();
+
+		HashMap<MaterialIcon, Integer> amounts = new HashMap<MaterialIcon, Integer>();
+
+		while (rs.next()) {
+
+			_materialIcons.entrySet().forEach(entry -> {
+
+				MaterialIcon materialIcon = entry.getValue();
+
+				try {
+					int amount = rs.getInt(materialIcon.GetDbAccessName());
+					amounts.put(materialIcon, amount);
+					// System.out.println("DB EXISTING: " + materialIcon.GetDisplayName() + " " +
+					// amount);
+				} catch (SQLException e) {
+					//
+					e.printStackTrace();
+				}
+
+			});
+		}
+
+		return amounts;
+	}
+
+	public static void DbSetSpecificAmounts(HashMap<MaterialIcon, Integer> amounts, UUID uuid) throws SQLException {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("UPDATE `%s` SET ", TableName));
@@ -235,6 +268,57 @@ public class MaterialIcons {
 		PreparedStatement preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(sb.toString());
 		preparedStatement.execute();
 
+	}
+
+	public static HashMap<MaterialIcon, Integer> DbGetSpecificAmounts(ArrayList<MaterialIcon> amounts, UUID uuid) throws SQLException {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ");
+
+		boolean firstEnty = true;
+
+		for (int i = 0; i < amounts.size(); i++) {
+			MaterialIcon materialIcon = amounts.get(i);
+			String col = materialIcon.GetDbAccessName();
+
+			if (firstEnty) {
+				sb.append(String.format("`%s`", col));
+				firstEnty = false;
+			} else {
+				sb.append(String.format(",`%s`", col));
+			}
+
+		}
+
+		sb.append(String.format(" FROM `%s` WHERE `id`=\"%s\"", TableName, uuid.toString()));
+
+		HashMap<MaterialIcon, Integer> result = new HashMap<MaterialIcon, Integer>();
+
+		if (firstEnty) {
+			// Nothing to do
+			return result;
+		}
+
+		// System.out.println(sb.toString());
+
+		PreparedStatement st = NarutoDataBase.mysql.getConnection().prepareStatement(sb.toString());
+		ResultSet rs = st.executeQuery();
+
+		while (rs.next()) {
+
+			for (int i = 0; i < amounts.size(); i++) {
+
+				MaterialIcon materialIcon = amounts.get(i);
+				try {
+					int amount = rs.getInt(materialIcon.GetDbAccessName());
+					result.put(materialIcon, amount);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+		return result;
 	}
 
 }

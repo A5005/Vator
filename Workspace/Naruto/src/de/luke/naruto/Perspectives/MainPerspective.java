@@ -1,5 +1,8 @@
 package de.luke.naruto.Perspectives;
 
+import java.sql.SQLException;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -8,25 +11,25 @@ import de.luke.naruto.constantData.Collections.MaterialGroupIcons;
 import de.luke.naruto.constantData.Collections.WeaponGroupIcons;
 import de.luke.naruto.constantData.Items.MaterialGroupIcon;
 
-
 public class MainPerspective {
 
-	public static Inventory OpenInventory(Player player, Inventory openInventory) {
+	public static Inventory OpenInventory(Player player, Inventory openInventory) throws SQLException {
 
 		if (openInventory != null)
 			player.closeInventory();
 
 		Inventory inventory = Bukkit.createInventory(null, 36, "§7§lMaterials");
-		UpdateAll(inventory);
+		UUID uuid = player.getUniqueId();
+		UpdateAll(inventory, uuid);
 		player.openInventory(inventory);
 		return inventory;
 	}
 
-	public static void UpdateAll(Inventory inventory) {
+	public static void UpdateAll(Inventory inventory, UUID uuid) throws SQLException {
 
 		UpdateMainItems(inventory);
 		MaterialGroupIcon firstmMaterialGroupIconId = MaterialGroupIcons.GetMaterialGroupIconFromPosition(0);
-		UpdateMaterialSubItems(inventory, firstmMaterialGroupIconId.GetUniqueId());
+		UpdateMaterialSubItems(inventory, uuid, firstmMaterialGroupIconId.GetUniqueId());
 	}
 
 	private static void UpdateMainItems(Inventory inventory) {
@@ -34,8 +37,8 @@ public class MainPerspective {
 		WeaponGroupIcons.PutIconsToInventory(inventory);
 	}
 
-	public static void UpdateMaterialSubItems(Inventory inventory, int materialGroupIconId) {
-		MaterialGroupIcons.PutSubIconsToInventory(inventory, materialGroupIconId);
+	public static void UpdateMaterialSubItems(Inventory inventory, UUID uuid, int materialGroupIconId) throws SQLException {
+		MaterialGroupIcons.PutSubIconsToInventory(inventory, uuid, materialGroupIconId);
 	}
 
 	public static void UpdateWeaponSubItems(Inventory inventory, int weaponGroupIconId) {

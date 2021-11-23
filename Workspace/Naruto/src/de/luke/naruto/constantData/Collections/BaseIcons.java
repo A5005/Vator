@@ -1,9 +1,12 @@
 package de.luke.naruto.constantData.Collections;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -22,9 +25,9 @@ public class BaseIcons {
 	public static void Create() {
 		_baseIcons = new HashMap<Integer, BaseIcon>();
 
-		AddIcon(UniqueIds.Workbench, 0, "§f§lWorkbench", "", ChatColor.WHITE);
-		AddIcon(UniqueIds.GreenWool, 0, "§f§lWool", "", ChatColor.WHITE);
-		AddIcon(UniqueIds.Barrier, 0, "§f§lBack", "", ChatColor.WHITE);
+		AddIcon(UniqueIds.Workbench, 0, "Craft", "", ChatColor.WHITE);
+		AddIcon(UniqueIds.GreenWool, 0, "Claim", "", ChatColor.GREEN);
+		AddIcon(UniqueIds.Barrier, 0, "< Back", "", ChatColor.RED);
 	}
 
 	private static void AddIcon(int uniqueId, int position, String displayName, String dbAccessName, ChatColor chatColor) {
@@ -33,20 +36,24 @@ public class BaseIcons {
 		_baseIcons.put(uniqueId, baseIcon);
 	}
 
-	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId) {
+	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId, List<String> lore) {
 
 		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+		@SuppressWarnings("deprecation")
 		ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 		ItemMeta itemMeta = itemStack.getItemMeta();
+		itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		BaseIcon baseIcon = GetBaseIconFromId(uniqueId);
-		itemMeta.setDisplayName(baseIcon.GetDisplayName());
 
+		itemMeta.setDisplayName(baseIcon.GetColoredDisplayName());
+		itemMeta.setLore(lore);
 		itemStack.setItemMeta(itemMeta);
 
 		// Important!!! Metadata only in the return value
 		itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, typeId);
 		itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.UniqueIdMetaData, uniqueId);
+
 		inventory.setItem(position, itemStack);
 
 	}
@@ -55,14 +62,16 @@ public class BaseIcons {
 		return _baseIcons.get(uniqueId);
 	}
 
-	public static void AddToInventory(BaseIcon baseIcon, Inventory inventory, int uniqueId, int position, int typeId) {
+	public static void AddToInventory(BaseIcon baseIcon, Inventory inventory, int uniqueId, int position, int typeId, List<String> lore) {
 
 		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+		@SuppressWarnings("deprecation")
 		ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 		ItemMeta itemMeta = itemStack.getItemMeta();
-		itemMeta.setDisplayName(baseIcon.GetDisplayName());
-
+		itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		itemMeta.setDisplayName(baseIcon.GetColoredDisplayName());
+		itemMeta.setLore(lore);
 		itemStack.setItemMeta(itemMeta);
 
 		// Important!!! Metadata only in the return value

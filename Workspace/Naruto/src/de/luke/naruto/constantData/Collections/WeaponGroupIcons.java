@@ -1,10 +1,13 @@
 package de.luke.naruto.constantData.Collections;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -36,10 +39,10 @@ public class WeaponGroupIcons {
 		_weaponGroupIcons = new HashMap<Integer, WeaponGroupIcon>();
 		_positions = new HashMap<Integer, WeaponGroupIcon>();
 		AddIcon(UniqueIds.CommonWeap, 4, "Common Weapons", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.UnCommonWeap, 5, "Uncommon Weapons", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.RareWeap, 6, "Rare Weapons", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.LegendWeap, 7, "Legendary Weapon", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.ExclusiveWeap, 8, "Exclusive Weapons", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.UnCommonWeap, 5, "Uncommon Weapons", "Materialnumber", ChatColor.DARK_GREEN);
+		AddIcon(UniqueIds.RareWeap, 6, "Rare Weapons", "Materialnumber", ChatColor.BLUE);
+		AddIcon(UniqueIds.LegendWeap, 7, "Legendary Weapon", "Materialnumber", ChatColor.YELLOW);
+		AddIcon(UniqueIds.ExclusiveWeap, 8, "Exclusive Weapons", "Materialnumber", ChatColor.RED);
 
 	}
 
@@ -74,7 +77,8 @@ public class WeaponGroupIcons {
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(weaponGroupIcon.GetDisplayName());
+			itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			itemMeta.setDisplayName(weaponGroupIcon.GetColoredDisplayName());
 			itemStack.setItemMeta(itemMeta);
 
 			// Important!!! Metadata only in the return value
@@ -104,9 +108,14 @@ public class WeaponGroupIcons {
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(weaponIcon.GetDisplayName());
+			itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			itemMeta.setDisplayName(weaponIcon.GetColoredDisplayName());
+			List<String> lore = new ArrayList<>();
+			lore.add("§7§lClick to open the menu!");
+			itemMeta.setLore(lore);
 			itemStack.setItemMeta(itemMeta);
-
+			
+			
 			// Important!!! Metadata only in the return value
 			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, TypeIds.Weapon);
 			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.UniqueIdMetaData, uniqueId);

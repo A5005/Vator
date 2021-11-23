@@ -1,19 +1,25 @@
 package de.luke.naruto.constantData.Collections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.BaseIcon;
+import de.luke.naruto.constantData.Items.Cost;
+import de.luke.naruto.constantData.Items.MaterialIcon;
+import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.constantData.Items.WeaponIcon;
 
 public class WeaponIcons extends BaseIcons {
 
 	private static HashMap<Integer, WeaponIcon> _weaponIcons;
+	private static HashMap<Material, WeaponIcon> _mcMaterialDict;
 
 	private static boolean _isInit = false;
 
@@ -21,63 +27,27 @@ public class WeaponIcons extends BaseIcons {
 	public static void Create() {
 
 		_weaponIcons = new HashMap<Integer, WeaponIcon>();
+		_mcMaterialDict = new HashMap<Material, WeaponIcon>();
 
-		HashMap<Integer, Integer> costs;
-
-		costs = new HashMap<Integer, Integer>() {
-			{
-				put(UniqueIds.Stick, 2);
-				put(UniqueIds.Feather, 5);
-			}
-		};
+		ArrayList<Cost> costs;
 
 		// CommonWeap
+		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 2), new Cost(UniqueIds.Feather, 5)));
 		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "Throwing Knife", "number", costs, ChatColor.WHITE);
 
-		costs = new HashMap<Integer, Integer>() {
-			{
-				put(UniqueIds.Stick, 3);
-				put(UniqueIds.Leather, 5);
-			}
-		};
-
+		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 2), new Cost(UniqueIds.Leather, 5)));
 		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		// UnCommonWeap
-
-		costs = new HashMap<Integer, Integer>() {
-			{
-				put(UniqueIds.Stick, 20);
-				put(UniqueIds.Clay, 5);
-				put(UniqueIds.StonePresPlate, 3);
-			}
-		};
-
+		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 20), new Cost(UniqueIds.Clay, 5), new Cost(UniqueIds.StonePresPlate, 3)));
 		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		// RareWeap
-		costs = new HashMap<Integer, Integer>() {
-			{
-				put(UniqueIds.Stick, 100);
-				put(UniqueIds.Clay, 20);
-				put(UniqueIds.Spider, 2);
-				put(UniqueIds.Iron, 3);
-			}
-		};
-
+		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 100), new Cost(UniqueIds.Clay, 20), new Cost(UniqueIds.Spider, 2), new Cost(UniqueIds.Iron, 3)));
 		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		// LegendWeap
-		costs = new HashMap<Integer, Integer>() {
-			{
-				put(UniqueIds.Stick, 500);
-				put(UniqueIds.Clay, 100);
-				put(UniqueIds.Spider, 15);
-				put(UniqueIds.Slime, 1);
-				put(UniqueIds.Diamond, 3);
-			}
-		};
-
+		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 500), new Cost(UniqueIds.Clay, 100), new Cost(UniqueIds.Spider, 15), new Cost(UniqueIds.Slime, 1), new Cost(UniqueIds.Diamond, 3)));
 		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "Throwing Axe", "number", costs, ChatColor.WHITE);
 
 		_isInit = true;
@@ -87,10 +57,12 @@ public class WeaponIcons extends BaseIcons {
 		return _isInit;
 	}
 
-	private static void AddIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, HashMap<Integer, Integer> costs, ChatColor chatColor) {
+	private static void AddIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, ArrayList<Cost> costs, ChatColor chatColor) {
 
 		WeaponIcon weaponIcon = new WeaponIcon(uniqueId, weaponGroupId, position, displayName, dbAccessName, costs, chatColor);
+		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
 		_weaponIcons.put(uniqueId, weaponIcon);
+		_mcMaterialDict.put(materialInfo.GetMaterial(), weaponIcon);
 	}
 
 	public static int[] FindMaterialGroupIcons(int weaponGroupId) {
@@ -110,6 +82,14 @@ public class WeaponIcons extends BaseIcons {
 
 	}
 
+	public static WeaponIcon TryGetMaterialIconFromMcMaterial(Material mcMaterial) {
+
+		if (!_mcMaterialDict.containsKey(mcMaterial))
+			return null;
+
+		return _mcMaterialDict.get(mcMaterial);
+	}
+
 	public static WeaponIcon GetWeaponIconFromId(int uniqueId) {
 		return _weaponIcons.get(uniqueId);
 	}
@@ -118,10 +98,10 @@ public class WeaponIcons extends BaseIcons {
 		return _weaponIcons.get(uniqueId);
 	}
 
-	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId) {
+	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId, List<String> lore) {
 
 		BaseIcon baseIcon = GetBaseIconFromId(uniqueId);
-		BaseIcons.AddToInventory(baseIcon, inventory, uniqueId, position, typeId);
+		BaseIcons.AddToInventory(baseIcon, inventory, uniqueId, position, typeId, lore);
 	}
 
 	public static void ListWeaponIcons() {

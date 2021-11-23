@@ -1,5 +1,8 @@
 package de.luke.commands;
 
+import java.sql.SQLException;
+import java.util.UUID;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,9 +18,11 @@ public class MenuCommand implements CommandExecutor {
 			return true;
 
 		Player player = (Player) sender;
-		// player.sendMessage(ChatColor.DARK_RED + "Hello, " + player.getName() +
-		// ChatColor.GREEN + "!");
-		MainPerspective.OpenInventory(player, null);
+		try {
+			MainPerspective.OpenInventory(player, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return true;
 	}

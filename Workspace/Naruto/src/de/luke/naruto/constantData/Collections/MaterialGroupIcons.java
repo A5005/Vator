@@ -1,10 +1,16 @@
 package de.luke.naruto.constantData.Collections;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -36,10 +42,10 @@ public class MaterialGroupIcons {
 		_materialGroupIcons = new HashMap<Integer, MaterialGroupIcon>();
 		_positions = new HashMap<Integer, MaterialGroupIcon>();
 
-		AddIcon(UniqueIds.CommonMat, 0, "Common Materials", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.UnCommonMat, 1, "Uncommon Materials", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.RareMat, 2, "Rare Materials", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.EpicMat, 3, "Epic Materials", "Materialnumber", ChatColor.WHITE);
+		AddIcon(UniqueIds.CommonMat, 0, "Common Materials", "Materialnumber", ChatColor.GRAY);
+		AddIcon(UniqueIds.UnCommonMat, 1, "Uncommon Materials", "Materialnumber", ChatColor.GREEN);
+		AddIcon(UniqueIds.RareMat, 2, "Rare Materials", "Materialnumber", ChatColor.AQUA);
+		AddIcon(UniqueIds.EpicMat, 3, "Epic Materials", "Materialnumber", ChatColor.LIGHT_PURPLE);
 
 	}
 
@@ -47,7 +53,7 @@ public class MaterialGroupIcons {
 
 		// Backward Pointer
 		int[] materialIconIds = MaterialIcons.FindMaterialGroupIcons(materialInfoId);
-		MaterialGroupIcon materialGroupIcon = new MaterialGroupIcon(materialInfoId, position, displayName, dbAccessName, materialIconIds);
+		MaterialGroupIcon materialGroupIcon = new MaterialGroupIcon(materialInfoId, position, displayName, dbAccessName, materialIconIds, chatColor);
 		_materialGroupIcons.put(materialInfoId, materialGroupIcon);
 
 		if (!_positions.containsKey(position))
@@ -74,7 +80,8 @@ public class MaterialGroupIcons {
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(materialGroupIcon.GetDisplayName());
+			itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			itemMeta.setDisplayName(materialGroupIcon.GetColoredDisplayName());
 			itemStack.setItemMeta(itemMeta);
 
 			// Important!!! Metadata only in the return value
@@ -88,7 +95,9 @@ public class MaterialGroupIcons {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void PutSubIconsToInventory(Inventory inventory, int materialGroupId) {
+	public static void PutSubIconsToInventory(Inventory inventory, UUID uuid, int materialGroupId) throws SQLException {
+
+		HashMap<MaterialIcon, Integer> amounts = MaterialIcons.DbReadAllIconAmounts(uuid);
 
 		MaterialGroupIcon materialGroupIcon = _materialGroupIcons.get(materialGroupId);
 
@@ -105,7 +114,13 @@ public class MaterialGroupIcons {
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(materialIcon.GetDisplayName());
+			itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+			int amount = amounts.get(materialIcon);
+			List<String> lore = new ArrayList<>();
+			lore.add("§7§lYou have: §f§l" + amount);
+			itemMeta.setDisplayName(materialIcon.GetColoredDisplayName());
+			itemMeta.setLore(lore);
 			itemStack.setItemMeta(itemMeta);
 
 			// Important!!! Metadata only in the return value

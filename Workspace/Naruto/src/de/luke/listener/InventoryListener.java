@@ -1,5 +1,8 @@
 package de.luke.listener;
 
+import java.sql.SQLException;
+import java.util.UUID;
+
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,12 +18,12 @@ import de.luke.naruto.Perspectives.MainPerspective;
 import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.tools.ItemMetadata;
-
+import de.luke.naruto.tools.PrintHelp;
 
 public class InventoryListener implements Listener {
 
 	@EventHandler
-	public void handleNavigatorGUIClickTop(InventoryClickEvent event) {
+	public void handleNavigatorGUIClickTop(InventoryClickEvent event) throws SQLException {
 
 		ItemStack selectedItemStack = TryGetValidItemStack(event);
 		if (selectedItemStack == null)
@@ -38,16 +41,18 @@ public class InventoryListener implements Listener {
 
 		int uniqueIdMetaData = (int) ItemMetadata.getMetadata(selectedItemStack, MetaDataIds.UniqueIdMetaData);
 
-		//PrintHelp.Print("Type  " + typeMetaData);
-		//PrintHelp.Print("Unique  " + uniqueIdMetaData);
+		// PrintHelp.Print("Type " + typeMetaData);
+		// PrintHelp.Print("Unique " + uniqueIdMetaData);
 
 		Inventory clickedInventory = event.getClickedInventory();
 
 		Player player = (Player) event.getWhoClicked();
 
+		UUID uuid = player.getUniqueId();
+
 		switch (typeMetaData) {
 		case TypeIds.MaterialGroup:
-			MainPerspective.UpdateMaterialSubItems(clickedInventory, uniqueIdMetaData);
+			MainPerspective.UpdateMaterialSubItems(clickedInventory, uuid, uniqueIdMetaData);
 			break;
 
 		case TypeIds.WeaponGroup:
@@ -57,12 +62,17 @@ public class InventoryListener implements Listener {
 		case TypeIds.Weapon:
 			CraftingPerspective.OpenInventory(player, clickedInventory, uniqueIdMetaData);
 			break;
-			
+
 		case TypeIds.BackIcon:
 			MainPerspective.OpenInventory(player, clickedInventory);
 			break;
 
-		};
+		case TypeIds.WorkBenchIcon:
+			PrintHelp.Print("WorkBenchIcon " + uniqueIdMetaData);
+			CraftingPerspective.Craft(player, clickedInventory);
+			break;
+
+		}
 
 	}
 

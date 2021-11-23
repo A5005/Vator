@@ -29,7 +29,7 @@ public class ClaimCommand implements CommandExecutor {
 		HashMap<MaterialIcon, Integer> newAmounts = new HashMap<MaterialIcon, Integer>();
 
 		try {
-			dbAmounts = MaterialIcons.DbReadAllAmounts(player.getUniqueId());
+			dbAmounts = MaterialIcons.DbReadAllMaterialAmounts(player.getUniqueId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -75,7 +75,7 @@ public class ClaimCommand implements CommandExecutor {
 		}
 
 		try {
-			MaterialIcons.DbWriteAmounts(newAmounts, player.getUniqueId());
+			MaterialIcons.DbSetSpecificAmounts(newAmounts, player.getUniqueId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

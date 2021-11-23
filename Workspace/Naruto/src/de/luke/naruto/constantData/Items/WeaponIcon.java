@@ -1,5 +1,6 @@
 package de.luke.naruto.constantData.Items;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -7,9 +8,9 @@ import org.bukkit.ChatColor;
 public class WeaponIcon extends BaseIcon {
 
 	private int _weaponGroupId;
-	private HashMap<Integer, Integer> _costs;
+	private ArrayList<Cost> _costs;
 
-	public WeaponIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, HashMap<Integer, Integer> costs, ChatColor chatColor) {
+	public WeaponIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, ArrayList<Cost> costs, ChatColor chatColor) {
 
 		super(uniqueId, position, displayName, dbAccessName, chatColor);
 		_weaponGroupId = weaponGroupId;
@@ -20,7 +21,7 @@ public class WeaponIcon extends BaseIcon {
 		return _weaponGroupId;
 	}
 
-	public HashMap<Integer, Integer> GetCosts() {
+	public ArrayList<Cost> GetCosts() {
 		return _costs;
 	}
 
