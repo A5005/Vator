@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import de.luke.naruto.constantData.Collections.BaseIcons;
@@ -27,128 +28,68 @@ public class CraftingPerspective {
 
 	private final static int weaponPosition = 4;
 
-	@SuppressWarnings("deprecation")
 	public static Inventory OpenInventory(Player player, Inventory openInventory, int weaponId) throws SQLException {
 
 		if (openInventory != null)
 			player.closeInventory();
 
 		WeaponIcon weaponIcon = WeaponIcons.GetWeaponIconFromId(weaponId);
+		Material weaponMaterial = weaponIcon.GetMaterialInfo().GetMaterial();
+
 		Inventory inventory = Bukkit.createInventory(null, 36, weaponIcon.GetDisplayName());
+		BaseIcons.AddToInventory(inventory, UniqueIds.Barrier, 27, TypeIds.BackIcon, null);
+		InventoryView inventoryView = player.openInventory(inventory);
+
+		Inventory topInventory = inventoryView.getTopInventory();
+		Inventory bottomInventory = inventoryView.getBottomInventory();
 
 		List<String> lore = new ArrayList<>();
 		lore.add("§7§lClick to open the menu!");
 
 		UUID uuid = player.getUniqueId();
+		boolean hasFreeSlot = HasFreeSlotForWeapon(bottomInventory, weaponMaterial);
 
-		UpdateWeaponIcon(inventory, weaponId, weaponIcon, uuid);
-		UpdateCraftIcon(inventory, weaponId, weaponIcon, uuid);
-		BaseIcons.AddToInventory(inventory, UniqueIds.Barrier, 27, TypeIds.BackIcon, null);
-		BaseIcons.AddToInventory(inventory, UniqueIds.GreenWool, 31, TypeIds.ClaimIcon, null);
-
-		player.openInventory(inventory);
+		UpdateWeaponIcon(topInventory, weaponId, weaponIcon, uuid);
+		UpdateCraftIcon(topInventory, weaponId, weaponIcon, uuid);
+		UpdateClaimIcon(hasFreeSlot, topInventory, bottomInventory, weaponMaterial);
 
 		return inventory;
 	}
 
-	private static void UpdateCraftIcon(Inventory inventory, int weaponId, WeaponIcon weaponIcon, UUID uuid) throws SQLException {
+	private static void UpdateClaimIcon(boolean hasFreeSlot, Inventory topInventory, Inventory bottomInventory, Material weaponMaterial) {
 
-		List<String> craftLore = GetCraftLore(weaponIcon, uuid);
-		BaseIcons.AddToInventory(inventory, UniqueIds.Workbench, 20, TypeIds.WorkBenchIcon, craftLore);
+		List<String> weaponLore = new ArrayList<String>();
+
+		if (hasFreeSlot) {
+			BaseIcons.AddToInventory(topInventory, UniqueIds.GreenWool, 31, TypeIds.ClaimIcon, null);
+		}
+
+		else {
+			weaponLore.add("§4 Inventory is full");
+			BaseIcons.AddToInventory(topInventory, UniqueIds.RedWool, 31, TypeIds.ClaimIcon, weaponLore);
+		}
+
 	}
 
-	private static void UpdateWeaponIcon(Inventory inventory, int weaponId, WeaponIcon weaponIcon, UUID uuid) throws SQLException {
+	private static void UpdateCraftIcon(Inventory topInventory, int weaponId, WeaponIcon weaponIcon, UUID uuid) throws SQLException {
+
+		List<String> craftLore = GetCraftLore(weaponIcon, uuid);
+		BaseIcons.AddToInventory(topInventory, UniqueIds.Workbench, 20, TypeIds.WorkBenchIcon, craftLore);
+	}
+
+	private static void UpdateWeaponIcon(Inventory topInventory, int weaponId, WeaponIcon weaponIcon, UUID uuid) throws SQLException {
 
 		List<String> weaponLore = new ArrayList<String>();
 
 		int amount = WeaponIcons.DbGetSpecificAmount(weaponIcon, uuid);
 		weaponLore.add("§7§lYou have: §f§l" + amount);
-		WeaponIcons.AddToInventory(inventory, weaponId, weaponPosition, TypeIds.CraftWeaponIcon, weaponLore);
+		WeaponIcons.AddToInventory(topInventory, weaponId, weaponPosition, TypeIds.CraftWeaponIcon, weaponLore);
 	}
 
-	public static void Claim(Player player, Inventory topInventory, Inventory bottomInventory) throws SQLException {
+	public static void Craft(Player player, Inventory topInventory) throws SQLException {
 
 		UUID uuid = player.getUniqueId();
-		HashMap<WeaponIcon, Integer> allWeaponIcons = WeaponIcons.DbReadAllIconAmounts(uuid);
-
-		// fill existing ItemStacks
-
-		int count = 0;
-		for (ItemStack itemStack : bottomInventory) {
-
-			if (itemStack == null)
-				continue;
-
-			Material material = itemStack.getType();
-
-			System.out.println(String.format("ItemStack pos:%d  Material:%s Amount:%d  MaxCount:%d", count++, material.toString(), itemStack.getAmount(), itemStack.getMaxStackSize()));
-
-			WeaponIcon stackWeaponIcon = WeaponIcons.TryGetMaterialIconFromMcMaterial(material);
-			if (stackWeaponIcon == null)
-				continue;
-
-			if (!allWeaponIcons.containsKey(stackWeaponIcon)) {
-				System.out.println("Not a Naruto Material");
-				continue;
-			}
-
-			int weaponStackAmount = itemStack.getAmount();
-
-			int maxStackSize = itemStack.getMaxStackSize();
-
-			if (weaponStackAmount >= maxStackSize) {
-				System.out.println("Stack is full");
-				continue;
-			}
-
-			int weaponDbAmount = allWeaponIcons.get(stackWeaponIcon);
-
-			int toFill = maxStackSize - weaponStackAmount;
-
-			int rest = 0;
-
-			// maxStackSize=64, weaponStackAmount=60, toFill=4, weaponDbAmount = 10
-			// 10 > 4
-			if (weaponDbAmount > toFill) {
-
-				System.out.println(String.format("Inc Itemstack to"));
-				itemStack.setAmount(maxStackSize); // weaponStackAmount + toFill
-				// 10 -4 = 6
-				rest = weaponDbAmount - toFill;
-			} else {
-
-				// maxStackSize=64, weaponStackAmount=30, toFill=34, weaponDbAmount = 10
-				itemStack.setAmount(weaponDbAmount);
-				rest = 0;
-			}
-
-			System.out.println(String.format("weaponStackAmount:%d  weaponDbAmount:%d  toFill:%d  rest:%d", weaponStackAmount, weaponDbAmount, toFill, rest));
-
-			allWeaponIcons.put(stackWeaponIcon, rest);
-			
-
-		}
-		
-		
-		// TODO fill existing new ItemStacks
-		
-		
-		// TODO Output not claimed Item Stacks
-		
-
-		/*
-		 * for (HashMap.Entry<WeaponIcon, Integer> entry : allWeaponIcons.entrySet()) {
-		 * int amount = entry.getValue(); if (amount > 0) {
-		 * 
-		 * bottomInventory.addItem(new
-		 * ItemStack(entry.getKey().GetMaterialInfo().GetMaterial(), 1)); } }
-		 */
-	}
-
-	public static void Craft(Player player, Inventory openInventory) throws SQLException {
-
-		UUID uuid = player.getUniqueId();
-		ItemStack itemStack = openInventory.getItem(weaponPosition);
+		ItemStack itemStack = topInventory.getItem(weaponPosition);
 		Material material = itemStack.getType();
 
 		WeaponIcon weaponIcon = WeaponIcons.TryGetMaterialIconFromMcMaterial(material);
@@ -187,8 +128,8 @@ public class CraftingPerspective {
 		WeaponIcons.DbSetSpecificAmount(weaponIcon, weaponCount, uuid);
 
 		// UpdateToolTips
-		UpdateWeaponIcon(openInventory, weaponId, weaponIcon, uuid);
-		UpdateCraftIcon(openInventory, weaponId, weaponIcon, uuid);
+		UpdateWeaponIcon(topInventory, weaponId, weaponIcon, uuid);
+		UpdateCraftIcon(topInventory, weaponId, weaponIcon, uuid);
 
 	}
 
@@ -246,6 +187,47 @@ public class CraftingPerspective {
 		}
 
 		return lore;
+	}
+
+	public static void Claim(Player player, Inventory topInventory, Inventory bottomInventory) throws SQLException {
+
+		ItemStack weaponItemStack = topInventory.getItem(weaponPosition);
+
+		Material material = weaponItemStack.getType();
+
+		if (!HasFreeSlotForWeapon(bottomInventory, material))
+			return;
+
+		ItemStack newItemStack = new ItemStack(weaponItemStack.getType(), 1);
+
+		bottomInventory.addItem(newItemStack);
+
+		boolean hasFreeSlot = HasFreeSlotForWeapon(bottomInventory, material);
+
+		if (!hasFreeSlot) {
+			UpdateClaimIcon(hasFreeSlot, topInventory, bottomInventory, material);
+		}
+
+	}
+
+	private static boolean HasFreeSlotForWeapon(Inventory inventory, Material weaponMaterial) {
+		for (ItemStack itemStack : inventory) {
+
+			if (itemStack == null)
+				return true;
+
+			Material stackMaterial = itemStack.getType();
+			if (!stackMaterial.equals(weaponMaterial))
+				continue;
+
+			int amount = itemStack.getAmount();
+			int maxStackSize = itemStack.getMaxStackSize();
+
+			if (amount < maxStackSize)
+				return true;
+		}
+
+		return false;
 	}
 
 }

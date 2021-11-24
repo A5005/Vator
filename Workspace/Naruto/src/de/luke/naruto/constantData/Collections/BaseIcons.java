@@ -25,6 +25,7 @@ public class BaseIcons {
 
 		AddIcon(UniqueIds.Workbench, 0, "Craft", "", ChatColor.WHITE, 0);
 		AddIcon(UniqueIds.GreenWool, 0, "Claim", "", ChatColor.GREEN, 0);
+		AddIcon(UniqueIds.RedWool, 0, "Claim", "", ChatColor.RED, 0);
 		AddIcon(UniqueIds.Barrier, 0, "< Back", "", ChatColor.RED, 0);
 	}
 
@@ -37,7 +38,13 @@ public class BaseIcons {
 	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId, List<String> lore) {
 
 		MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
-		@SuppressWarnings("deprecation")
+
+		ItemStack existingItemStack = inventory.getItem(position);
+
+		if (existingItemStack != null) {
+			inventory.clear(position);
+		}
+
 		ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
 		ItemMeta itemMeta = itemStack.getItemMeta();

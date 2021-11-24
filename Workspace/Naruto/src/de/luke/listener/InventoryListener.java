@@ -7,10 +7,9 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
 import org.bukkit.event.inventory.InventoryClickEvent;
-
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import de.luke.naruto.Perspectives.CraftingPerspective;
@@ -18,7 +17,6 @@ import de.luke.naruto.Perspectives.MainPerspective;
 import de.luke.naruto.constantData.Ids.MetaDataIds;
 import de.luke.naruto.constantData.Ids.TypeIds;
 import de.luke.naruto.tools.ItemMetadata;
-import de.luke.naruto.tools.PrintHelp;
 
 public class InventoryListener implements Listener {
 
@@ -44,20 +42,20 @@ public class InventoryListener implements Listener {
 		// PrintHelp.Print("Type " + typeMetaData);
 		// PrintHelp.Print("Unique " + uniqueIdMetaData);
 
+		InventoryView inventoryView = event.getView();
+
+		Inventory topInventory = inventoryView.getTopInventory();
+		Inventory bottomInventory = inventoryView.getBottomInventory();
+
 		Inventory clickedInventory = event.getClickedInventory();
+		if (!clickedInventory.equals(topInventory))
+			return;
 
 		Player player = (Player) event.getWhoClicked();
 
 		UUID uuid = player.getUniqueId();
 
 		switch (typeMetaData) {
-		case TypeIds.MaterialGroup:
-			MainPerspective.UpdateMaterialSubItems(clickedInventory, uuid, uniqueIdMetaData);
-			break;
-
-		case TypeIds.WeaponGroup:
-			MainPerspective.UpdateWeaponSubItems(clickedInventory, uniqueIdMetaData);
-			break;
 
 		case TypeIds.Weapon:
 			CraftingPerspective.OpenInventory(player, clickedInventory, uniqueIdMetaData);
@@ -67,14 +65,21 @@ public class InventoryListener implements Listener {
 			MainPerspective.OpenInventory(player, clickedInventory);
 			break;
 
-		case TypeIds.WorkBenchIcon:
-			CraftingPerspective.Craft(player, clickedInventory);
+		case TypeIds.MaterialGroup:
+			MainPerspective.UpdateMaterialSubItems(topInventory, uuid, uniqueIdMetaData);
 			break;
 
-		case TypeIds.ClaimIcon:
+		case TypeIds.WeaponGroup:
+			MainPerspective.UpdateWeaponSubItems(topInventory, uniqueIdMetaData);
+			break;
 
-			Inventory bottomInventory = event.getView().getBottomInventory();
-			CraftingPerspective.Claim(player, clickedInventory, bottomInventory);
+		case TypeIds.WorkBenchIcon:
+			CraftingPerspective.Craft(player, topInventory);
+			break;
+
+		// TODO Update Claimicon when dropping
+		case TypeIds.ClaimIcon:
+			CraftingPerspective.Claim(player, topInventory, bottomInventory);
 			break;
 
 		}

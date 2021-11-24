@@ -92,6 +92,7 @@ public class MaterialInfos {
 		// Crafting
 		AddMaterialItem(UniqueIds.Workbench, Material.WORKBENCH, 0);
 		AddMaterialItem(UniqueIds.GreenWool, Material.WOOL, 5);
+		AddMaterialItem(UniqueIds.RedWool, Material.WOOL, 14);
 		AddMaterialItem(UniqueIds.Barrier, Material.BARRIER, 0);
 
 	}

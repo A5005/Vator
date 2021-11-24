@@ -25,24 +25,24 @@ public class MainPerspective {
 		return inventory;
 	}
 
-	public static void UpdateAll(Inventory inventory, UUID uuid) throws SQLException {
+	public static void UpdateAll(Inventory topInventory, UUID uuid) throws SQLException {
 
-		UpdateMainItems(inventory);
+		UpdateMainItems(topInventory);
 		MaterialGroupIcon firstmMaterialGroupIconId = MaterialGroupIcons.GetMaterialGroupIconFromPosition(0);
-		UpdateMaterialSubItems(inventory, uuid, firstmMaterialGroupIconId.GetUniqueId());
+		UpdateMaterialSubItems(topInventory, uuid, firstmMaterialGroupIconId.GetUniqueId());
 	}
 
-	private static void UpdateMainItems(Inventory inventory) {
-		MaterialGroupIcons.PutIconsToInventory(inventory);
-		WeaponGroupIcons.PutIconsToInventory(inventory);
+	private static void UpdateMainItems(Inventory topInventory) {
+		MaterialGroupIcons.PutIconsToInventory(topInventory);
+		WeaponGroupIcons.PutIconsToInventory(topInventory);
 	}
 
-	public static void UpdateMaterialSubItems(Inventory inventory, UUID uuid, int materialGroupIconId) throws SQLException {
-		MaterialGroupIcons.PutSubIconsToInventory(inventory, uuid, materialGroupIconId);
+	public static void UpdateMaterialSubItems(Inventory topInventory, UUID uuid, int materialGroupIconId) throws SQLException {
+		MaterialGroupIcons.PutSubIconsToInventory(topInventory, uuid, materialGroupIconId);
 	}
 
-	public static void UpdateWeaponSubItems(Inventory inventory, int weaponGroupIconId) {
-		WeaponGroupIcons.PutSubIconsToInventory(inventory, weaponGroupIconId);
+	public static void UpdateWeaponSubItems(Inventory topInventory, int weaponGroupIconId) {
+		WeaponGroupIcons.PutSubIconsToInventory(topInventory, weaponGroupIconId);
 	}
 
 }

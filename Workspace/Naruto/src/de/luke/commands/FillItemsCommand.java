@@ -34,26 +34,22 @@ public class FillItemsCommand implements CommandExecutor {
 		for (int i = 0; i < inventory.getSize(); i++) {
 
 			String yamlItem = customConfig.getString("i" + i);
+			if (yamlItem.equalsIgnoreCase("null")) {
+				inventory.clear(i);
+				continue;
+			}
 
-			System.out.println("A " + yamlItem);
 			String[] split = yamlItem.split(",");
-
-			System.out.println("SPLIT ");
-
 			String materialIdString = split[0];
 			String amountString = split[1];
 
 			int materialId = Integer.parseInt(materialIdString);
 			int amount = Integer.parseInt(amountString);
 
-			System.out.println(materialId + " / " + amount);
-
 			MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(materialId);
 
 			Material material = materialInfo.GetMaterial();
 			ItemStack itemStack = new ItemStack(material, amount);
-			System.out.println(i + " " + material.toString());
-
 			inventory.setItem(i, itemStack);
 
 		}

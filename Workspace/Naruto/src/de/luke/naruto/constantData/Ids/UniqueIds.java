@@ -82,7 +82,8 @@ public class UniqueIds {
 	//Crafting
 	public static final int Workbench = 200;
 	public static final int GreenWool = 201;
-	public static final int Barrier = 202;
+	public static final int RedWool = 202;
+	public static final int Barrier = 203;
 	
 	
 }
