@@ -71,6 +71,12 @@ public class InventoryListener implements Listener {
 			CraftingPerspective.Craft(player, clickedInventory);
 			break;
 
+		case TypeIds.ClaimIcon:
+
+			Inventory bottomInventory = event.getView().getBottomInventory();
+			CraftingPerspective.Claim(player, clickedInventory, bottomInventory);
+			break;
+
 		}
 
 	}

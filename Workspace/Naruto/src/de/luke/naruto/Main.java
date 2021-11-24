@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.luke.commands.ClaimCommand;
 import de.luke.commands.MenuCommand;
+import de.luke.commands.RemoveAllItemsCommand;
 import de.luke.config.ConfigManager;
 import de.luke.listener.AttackListener;
 import de.luke.listener.InventoryListener;
@@ -38,6 +39,8 @@ public class Main extends JavaPlugin {
 
 		getCommand("menu").setExecutor(new MenuCommand());
 		getCommand("claim").setExecutor(new ClaimCommand());
+		getCommand("rai").setExecutor(new RemoveAllItemsCommand());
+		
 		
 		NarutoDataBase.loadMySQL();
 

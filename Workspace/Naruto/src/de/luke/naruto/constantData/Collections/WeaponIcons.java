@@ -258,5 +258,37 @@ public class WeaponIcons extends BaseIcons {
 		}
 		return result;
 	}
+	
+	
+	public static HashMap<WeaponIcon, Integer> DbReadAllIconAmounts(UUID uuid) throws SQLException {
+
+		String sqlString = String.format("SELECT * FROM `%s` WHERE ID = '%s'", TableName, uuid.toString());
+
+		PreparedStatement st = NarutoDataBase.mysql.getConnection().prepareStatement(sqlString);
+		ResultSet rs = st.executeQuery();
+
+		HashMap<WeaponIcon, Integer> amounts = new HashMap<WeaponIcon, Integer>();
+
+		while (rs.next()) {
+
+			_weaponIcons.entrySet().forEach(entry -> {
+
+				WeaponIcon weaponIcon = entry.getValue();
+
+				try {
+					int amount = rs.getInt(weaponIcon.GetDbAccessName());
+					amounts.put(weaponIcon, amount);
+					// System.out.println("DB EXISTING: " + materialIcon.GetDisplayName() + " " +
+					// amount);
+				} catch (SQLException e) {
+					//
+					e.printStackTrace();
+				}
+
+			});
+		}
+
+		return amounts;
+	}
 
 }

@@ -11,4 +11,8 @@ commands:
   claim:
     aliases: [cl]
     description: Claim command
-
+    
+  rai:
+    aliases: [ra]
+    description: Remove All Items
+    
