@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.luke.commands.ClaimCommand;
+import de.luke.commands.FillItemsCommand;
 import de.luke.commands.MenuCommand;
 import de.luke.commands.RemoveAllItemsCommand;
 import de.luke.config.ConfigManager;
@@ -40,6 +41,9 @@ public class Main extends JavaPlugin {
 		getCommand("menu").setExecutor(new MenuCommand());
 		getCommand("claim").setExecutor(new ClaimCommand());
 		getCommand("rai").setExecutor(new RemoveAllItemsCommand());
+		getCommand("fill").setExecutor(new FillItemsCommand());
+		
+		
 		
 		
 		NarutoDataBase.loadMySQL();

@@ -1,6 +1,5 @@
 package de.luke.naruto.constantData.Collections;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,24 +20,23 @@ public class BaseIcons {
 
 	private static HashMap<Integer, BaseIcon> _baseIcons;
 
-	@SuppressWarnings("serial")
 	public static void Create() {
 		_baseIcons = new HashMap<Integer, BaseIcon>();
 
-		AddIcon(UniqueIds.Workbench, 0, "Craft", "", ChatColor.WHITE);
-		AddIcon(UniqueIds.GreenWool, 0, "Claim", "", ChatColor.GREEN);
-		AddIcon(UniqueIds.Barrier, 0, "< Back", "", ChatColor.RED);
+		AddIcon(UniqueIds.Workbench, 0, "Craft", "", ChatColor.WHITE, 0);
+		AddIcon(UniqueIds.GreenWool, 0, "Claim", "", ChatColor.GREEN, 0);
+		AddIcon(UniqueIds.Barrier, 0, "< Back", "", ChatColor.RED, 0);
 	}
 
-	private static void AddIcon(int uniqueId, int position, String displayName, String dbAccessName, ChatColor chatColor) {
+	private static void AddIcon(int uniqueId, int position, String displayName, String dbAccessName, ChatColor chatColor, int priority) {
 
-		BaseIcon baseIcon = new BaseIcon(uniqueId, position, displayName, dbAccessName, chatColor);
+		BaseIcon baseIcon = new BaseIcon(uniqueId, position, displayName, dbAccessName, chatColor, priority);
 		_baseIcons.put(uniqueId, baseIcon);
 	}
 
 	public static void AddToInventory(Inventory inventory, int uniqueId, int position, int typeId, List<String> lore) {
 
-		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+		MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
 		@SuppressWarnings("deprecation")
 		ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
@@ -64,7 +62,7 @@ public class BaseIcons {
 
 	public static void AddToInventory(BaseIcon baseIcon, Inventory inventory, int uniqueId, int position, int typeId, List<String> lore) {
 
-		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+		MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
 		@SuppressWarnings("deprecation")
 		ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 

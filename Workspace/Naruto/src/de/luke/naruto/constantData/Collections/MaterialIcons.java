@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +14,6 @@ import org.bukkit.inventory.Inventory;
 
 import de.luke.naruto.constantData.Ids.UniqueIds;
 import de.luke.naruto.constantData.Items.BaseIcon;
-import de.luke.naruto.constantData.Items.Cost;
 import de.luke.naruto.constantData.Items.MaterialIcon;
 import de.luke.naruto.constantData.Items.MaterialInfo;
 import de.luke.naruto.database.NarutoDataBase;
@@ -34,64 +32,64 @@ public class MaterialIcons {
 		_mcMaterialDict = new HashMap<Material, MaterialIcon>();
 
 		// CommonMat
-		AddIcon(UniqueIds.Stick, UniqueIds.CommonMat, 18, "Stick", "A1", ChatColor.WHITE);
-		AddIcon(UniqueIds.WoodenBtn, UniqueIds.CommonMat, 19, "Wooden Button", "A2", ChatColor.WHITE);
-		AddIcon(UniqueIds.StoneBtn, UniqueIds.CommonMat, 20, "Stone Button", "A3", ChatColor.WHITE);
+		AddIcon(UniqueIds.Stick, UniqueIds.CommonMat, 18, "Stick", "A1", ChatColor.WHITE, 1);
+		AddIcon(UniqueIds.WoodenBtn, UniqueIds.CommonMat, 19, "Wooden Button", "A2", ChatColor.WHITE, 2);
+		AddIcon(UniqueIds.StoneBtn, UniqueIds.CommonMat, 20, "Stone Button", "A3", ChatColor.WHITE, 3);
 
-		AddIcon(UniqueIds.WoodenPresPlate, UniqueIds.CommonMat, 21, "Wooden Pressure Plate", "A4", ChatColor.WHITE);
-		AddIcon(UniqueIds.StonePresPlate, UniqueIds.CommonMat, 22, "Stone Pressure Plate", "A5", ChatColor.WHITE);
-		AddIcon(UniqueIds.Feather, UniqueIds.CommonMat, 23, "Feather", "A6", ChatColor.WHITE);
+		AddIcon(UniqueIds.WoodenPresPlate, UniqueIds.CommonMat, 21, "Wooden Pressure Plate", "A4", ChatColor.WHITE, 4);
+		AddIcon(UniqueIds.StonePresPlate, UniqueIds.CommonMat, 22, "Stone Pressure Plate", "A5", ChatColor.WHITE, 5);
+		AddIcon(UniqueIds.Feather, UniqueIds.CommonMat, 23, "Feather", "A6", ChatColor.WHITE, 6);
 
-		AddIcon(UniqueIds.Leather, UniqueIds.CommonMat, 24, "Leather", "A7", ChatColor.WHITE);
-		AddIcon(UniqueIds.Paper, UniqueIds.CommonMat, 25, "Paper", "A8", ChatColor.WHITE);
-		AddIcon(UniqueIds.Book, UniqueIds.CommonMat, 26, "Book", "A9", ChatColor.WHITE);
+		AddIcon(UniqueIds.Leather, UniqueIds.CommonMat, 24, "Leather", "A7", ChatColor.WHITE, 7);
+		AddIcon(UniqueIds.Paper, UniqueIds.CommonMat, 25, "Paper", "A8", ChatColor.WHITE, 8);
+		AddIcon(UniqueIds.Book, UniqueIds.CommonMat, 26, "Book", "A9", ChatColor.WHITE, 9);
 
 		// UnCommonMat
-		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "String", "B1", ChatColor.WHITE);
-		AddIcon(UniqueIds.Bone, UniqueIds.UnCommonMat, 19, "Wooden Button", "B2", ChatColor.WHITE);
-		AddIcon(UniqueIds.Brick, UniqueIds.UnCommonMat, 20, "Stone Button", "B3", ChatColor.WHITE);
+		AddIcon(UniqueIds.String, UniqueIds.UnCommonMat, 18, "String", "B1", ChatColor.WHITE, 10);
+		AddIcon(UniqueIds.Bone, UniqueIds.UnCommonMat, 19, "Wooden Button", "B2", ChatColor.WHITE, 11);
+		AddIcon(UniqueIds.Brick, UniqueIds.UnCommonMat, 20, "Stone Button", "B3", ChatColor.WHITE, 12);
 
-		AddIcon(UniqueIds.NeBrick, UniqueIds.UnCommonMat, 21, "Nether Brick", "B4", ChatColor.WHITE);
-		AddIcon(UniqueIds.Clay, UniqueIds.UnCommonMat, 22, "Clay", "B5", ChatColor.WHITE);
-		AddIcon(UniqueIds.Coal, UniqueIds.UnCommonMat, 23, "Coal", "B6", ChatColor.WHITE);
+		AddIcon(UniqueIds.NeBrick, UniqueIds.UnCommonMat, 21, "Nether Brick", "B4", ChatColor.WHITE, 13);
+		AddIcon(UniqueIds.Clay, UniqueIds.UnCommonMat, 22, "Clay", "B5", ChatColor.WHITE, 14);
+		AddIcon(UniqueIds.Coal, UniqueIds.UnCommonMat, 23, "Coal", "B6", ChatColor.WHITE, 15);
 
-		AddIcon(UniqueIds.Flint, UniqueIds.UnCommonMat, 24, "Flint", "B7", ChatColor.WHITE);
-		AddIcon(UniqueIds.Creeper, UniqueIds.UnCommonMat, 25, "Creeper", "B8", ChatColor.WHITE);
-		AddIcon(UniqueIds.Compass, UniqueIds.UnCommonMat, 26, "Compass", "B9", ChatColor.WHITE);
+		AddIcon(UniqueIds.Flint, UniqueIds.UnCommonMat, 24, "Flint", "B7", ChatColor.WHITE, 16);
+		AddIcon(UniqueIds.Creeper, UniqueIds.UnCommonMat, 25, "Creeper", "B8", ChatColor.WHITE, 17);
+		AddIcon(UniqueIds.Compass, UniqueIds.UnCommonMat, 26, "Compass", "B9", ChatColor.WHITE, 18);
 
 		// RareMat
-		AddIcon(UniqueIds.Spider, UniqueIds.RareMat, 18, "Mob Eye", "C1", ChatColor.WHITE);
-		AddIcon(UniqueIds.Glowstone, UniqueIds.RareMat, 19, "Glowstone", "C2", ChatColor.WHITE);
-		AddIcon(UniqueIds.Quartz, UniqueIds.RareMat, 20, "Quartz", "C3", ChatColor.WHITE);
+		AddIcon(UniqueIds.Spider, UniqueIds.RareMat, 18, "Mob Eye", "C1", ChatColor.WHITE, 19);
+		AddIcon(UniqueIds.Glowstone, UniqueIds.RareMat, 19, "Glowstone", "C2", ChatColor.WHITE, 20);
+		AddIcon(UniqueIds.Quartz, UniqueIds.RareMat, 20, "Quartz", "C3", ChatColor.WHITE, 21);
 
-		AddIcon(UniqueIds.Cream, UniqueIds.RareMat, 21, "Magma Cream", "C4", ChatColor.WHITE);
-		AddIcon(UniqueIds.Iron, UniqueIds.RareMat, 22, "Iron", "C5", ChatColor.WHITE);
-		AddIcon(UniqueIds.Gold, UniqueIds.RareMat, 23, "Gold", "C6", ChatColor.WHITE);
+		AddIcon(UniqueIds.Cream, UniqueIds.RareMat, 21, "Magma Cream", "C4", ChatColor.WHITE, 22);
+		AddIcon(UniqueIds.Iron, UniqueIds.RareMat, 22, "Iron", "C5", ChatColor.WHITE, 23);
+		AddIcon(UniqueIds.Gold, UniqueIds.RareMat, 23, "Gold", "C6", ChatColor.WHITE, 24);
 
-		AddIcon(UniqueIds.PrisShard, UniqueIds.RareMat, 24, "Prismarine Shard", "C7", ChatColor.WHITE);
-		AddIcon(UniqueIds.PrisCrystal, UniqueIds.RareMat, 25, "Prismarine Crystal", "C8", ChatColor.WHITE);
-		AddIcon(UniqueIds.Watch, UniqueIds.RareMat, 26, "Clock", "C9", ChatColor.WHITE);
+		AddIcon(UniqueIds.PrisShard, UniqueIds.RareMat, 24, "Prismarine Shard", "C7", ChatColor.WHITE, 25);
+		AddIcon(UniqueIds.PrisCrystal, UniqueIds.RareMat, 25, "Prismarine Crystal", "C8", ChatColor.WHITE, 26);
+		AddIcon(UniqueIds.Watch, UniqueIds.RareMat, 26, "Clock", "C9", ChatColor.WHITE, 27);
 
 		// EpicMat
-		AddIcon(UniqueIds.Ferm, UniqueIds.EpicMat, 18, "Special Mob Eye", "D1", ChatColor.WHITE);
-		AddIcon(UniqueIds.Tear, UniqueIds.EpicMat, 19, "Ghast Tear", "D2", ChatColor.WHITE);
-		AddIcon(UniqueIds.Blaze, UniqueIds.EpicMat, 20, "Blaze Powder", "D3", ChatColor.WHITE);
+		AddIcon(UniqueIds.Ferm, UniqueIds.EpicMat, 18, "Special Mob Eye", "D1", ChatColor.WHITE, 28);
+		AddIcon(UniqueIds.Tear, UniqueIds.EpicMat, 19, "Ghast Tear", "D2", ChatColor.WHITE, 29);
+		AddIcon(UniqueIds.Blaze, UniqueIds.EpicMat, 20, "Blaze Powder", "D3", ChatColor.WHITE, 30);
 
-		AddIcon(UniqueIds.Slime, UniqueIds.EpicMat, 21, "Slimeball", "D4", ChatColor.WHITE);
-		AddIcon(UniqueIds.Ender, UniqueIds.EpicMat, 22, "Eye of Ender", "D5", ChatColor.WHITE);
-		AddIcon(UniqueIds.Diamond, UniqueIds.EpicMat, 23, "Diamond", "D6", ChatColor.WHITE);
+		AddIcon(UniqueIds.Slime, UniqueIds.EpicMat, 21, "Slimeball", "D4", ChatColor.WHITE, 30);
+		AddIcon(UniqueIds.Ender, UniqueIds.EpicMat, 22, "Eye of Ender", "D5", ChatColor.WHITE, 31);
+		AddIcon(UniqueIds.Diamond, UniqueIds.EpicMat, 23, "Diamond", "D6", ChatColor.WHITE, 32);
 
-		AddIcon(UniqueIds.Emerald, UniqueIds.EpicMat, 24, "Emerald", "D7", ChatColor.WHITE);
-		AddIcon(UniqueIds.Bottle, UniqueIds.EpicMat, 25, "Enchanting Bottle", "D8", ChatColor.WHITE);
-		AddIcon(UniqueIds.Star, UniqueIds.EpicMat, 26, "Nether Star", "D9", ChatColor.WHITE);
+		AddIcon(UniqueIds.Emerald, UniqueIds.EpicMat, 24, "Emerald", "D7", ChatColor.WHITE, 33);
+		AddIcon(UniqueIds.Bottle, UniqueIds.EpicMat, 25, "Enchanting Bottle", "D8", ChatColor.WHITE, 34);
+		AddIcon(UniqueIds.Star, UniqueIds.EpicMat, 26, "Nether Star", "D9", ChatColor.WHITE, 35);
 
 		_isInit = true;
 	}
 
-	private static void AddIcon(int uniqueId, int materialGroupId, int position, String displayName, String dbAccessName, ChatColor chatColor) {
+	private static void AddIcon(int uniqueId, int materialGroupId, int position, String displayName, String dbAccessName, ChatColor chatColor, int priority) {
 
-		MaterialIcon materialIcon = new MaterialIcon(uniqueId, materialGroupId, position, displayName, dbAccessName, chatColor);
-		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+		MaterialIcon materialIcon = new MaterialIcon(uniqueId, materialGroupId, position, displayName, dbAccessName, chatColor, priority);
+		MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
 		_materialIcons.put(uniqueId, materialIcon);
 		_mcMaterialDict.put(materialInfo.GetMaterial(), materialIcon);
 

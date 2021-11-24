@@ -1,13 +1,14 @@
 package de.luke.commands;
 
+import de.luke.naruto.Perspectives.MainPerspective;
+
 import java.sql.SQLException;
-import java.util.UUID;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import de.luke.naruto.Perspectives.MainPerspective;
+
 
 public class MenuCommand implements CommandExecutor {
 

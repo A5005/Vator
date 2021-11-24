@@ -1,17 +1,20 @@
 package de.luke.commands;
 
-import java.util.ArrayList;
-
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import de.luke.config.ConfigManager;
+import de.luke.naruto.constantData.Collections.MaterialInfos;
+import de.luke.naruto.constantData.Items.MaterialInfo;
 
-public class RemoveAllItemsCommand implements CommandExecutor {
-	
+public class AddItemsCommand implements CommandExecutor {
+
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -20,24 +23,12 @@ public class RemoveAllItemsCommand implements CommandExecutor {
 			return true;
 
 		Player player = (Player) sender;
-		
-		Inventory inventory =player.getInventory();
-		
-		ArrayList<ItemStack> itemStacksToRemove = new ArrayList<ItemStack>();
 
-		for (ItemStack itemStack : inventory) {
+		Inventory inventory = player.getInventory();
 
-			if (itemStack == null)
-				continue;
+		YamlConfiguration customConfig = ConfigManager.LoadOrCreateConfig("additems.yml");
 
-			itemStacksToRemove.add(itemStack);
-		}
-		
-		for (ItemStack itemStack : itemStacksToRemove) {
-			inventory.remove(itemStack);
-		}
-		
-		
 		return true;
+
 	}
 }

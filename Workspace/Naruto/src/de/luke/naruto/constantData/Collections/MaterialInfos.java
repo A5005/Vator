@@ -103,7 +103,7 @@ public class MaterialInfos {
 
 	}
 
-	public static MaterialInfo GetMaterialItem(int uniqueId) {
+	public static MaterialInfo GetMaterialInfo(int uniqueId) {
 
 		return _materialInfos.get(uniqueId);
 	}

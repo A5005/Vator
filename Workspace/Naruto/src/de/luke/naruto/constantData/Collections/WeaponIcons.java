@@ -39,22 +39,22 @@ public class WeaponIcons extends BaseIcons {
 
 		// CommonWeap
 		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 2), new Cost(UniqueIds.Feather, 5)));
-		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "Throwing Knife", "A1", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.Arrow, UniqueIds.CommonWeap, 18, "Throwing Knife", "A1", costs, ChatColor.WHITE, 1);
 
 		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 2), new Cost(UniqueIds.Leather, 5)));
-		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "Throwing Axe", "A2", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.WoodAxe, UniqueIds.CommonWeap, 19, "Throwing Axe", "A2", costs, ChatColor.WHITE, 2);
 
 		// UnCommonWeap
 		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 20), new Cost(UniqueIds.Clay, 5), new Cost(UniqueIds.StonePresPlate, 3)));
-		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "Throwing Axe", "B1", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.StoneAxe, UniqueIds.UnCommonWeap, 18, "Throwing Axe", "B1", costs, ChatColor.WHITE, 3);
 
 		// RareWeap
 		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 100), new Cost(UniqueIds.Clay, 20), new Cost(UniqueIds.Spider, 2), new Cost(UniqueIds.Iron, 3)));
-		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "Throwing Axe", "C1", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.IronAxe, UniqueIds.RareWeap, 18, "Throwing Axe", "C1", costs, ChatColor.WHITE, 4);
 
 		// LegendWeap
 		costs = new ArrayList<Cost>(Arrays.asList(new Cost(UniqueIds.Stick, 500), new Cost(UniqueIds.Clay, 100), new Cost(UniqueIds.Spider, 15), new Cost(UniqueIds.Slime, 1), new Cost(UniqueIds.Diamond, 3)));
-		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "Throwing Axe", "D1", costs, ChatColor.WHITE);
+		AddIcon(UniqueIds.DiamondAxe, UniqueIds.LegendWeap, 18, "Throwing Axe", "D1", costs, ChatColor.WHITE, 5);
 
 		_isInit = true;
 	}
@@ -63,10 +63,10 @@ public class WeaponIcons extends BaseIcons {
 		return _isInit;
 	}
 
-	private static void AddIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, ArrayList<Cost> costs, ChatColor chatColor) {
+	private static void AddIcon(int uniqueId, int weaponGroupId, int position, String displayName, String dbAccessName, ArrayList<Cost> costs, ChatColor chatColor, int priority) {
 
-		WeaponIcon weaponIcon = new WeaponIcon(uniqueId, weaponGroupId, position, displayName, dbAccessName, costs, chatColor);
-		MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+		WeaponIcon weaponIcon = new WeaponIcon(uniqueId, weaponGroupId, position, displayName, dbAccessName, costs, chatColor, priority);
+		MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
 		_weaponIcons.put(uniqueId, weaponIcon);
 		_mcMaterialDict.put(materialInfo.GetMaterial(), weaponIcon);
 	}
@@ -136,7 +136,7 @@ public class WeaponIcons extends BaseIcons {
 		sb.append(") ");
 		sb.append(sbValues.toString());
 
-		//System.out.println(sb.toString());
+		// System.out.println(sb.toString());
 		PreparedStatement preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(sb.toString());
 		preparedStatement.execute();
 
@@ -180,7 +180,7 @@ public class WeaponIcons extends BaseIcons {
 
 		String col = weaponIcon.GetDbAccessName();
 		String select = String.format("UPDATE `%s` SET `%s`=%d WHERE `ID`=\"%s\"", TableName, col, amount, uuid.toString());
-		//System.out.println(select);
+		// System.out.println(select);
 		PreparedStatement preparedStatement = NarutoDataBase.mysql.getConnection().prepareStatement(select);
 		preparedStatement.execute();
 	}
@@ -258,8 +258,7 @@ public class WeaponIcons extends BaseIcons {
 		}
 		return result;
 	}
-	
-	
+
 	public static HashMap<WeaponIcon, Integer> DbReadAllIconAmounts(UUID uuid) throws SQLException {
 
 		String sqlString = String.format("SELECT * FROM `%s` WHERE ID = '%s'", TableName, uuid.toString());

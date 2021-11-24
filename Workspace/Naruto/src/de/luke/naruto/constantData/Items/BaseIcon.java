@@ -11,14 +11,16 @@ public class BaseIcon {
 	private String _displayName;
 	private String _dbAccessName;
 	private ChatColor _chatColor;
+	private int _priority;
 
-	public BaseIcon(int uniqueId, int position, String displayName, String dbAccessName, ChatColor chatColor) {
+	public BaseIcon(int uniqueId, int position, String displayName, String dbAccessName, ChatColor chatColor, int priority) {
 
 		_uniqueId = uniqueId;
 		_displayName = displayName;
 		_position = position;
 		_dbAccessName = dbAccessName;
 		_chatColor = chatColor;
+		_priority = priority;
 	}
 
 	public int GetUniqueId() {
@@ -45,9 +47,13 @@ public class BaseIcon {
 		return _chatColor;
 	}
 	
+	public int GetPriority() {
+		return _priority;
+	}
+	
 	public MaterialInfo GetMaterialInfo()
 	{
-		return MaterialInfos.GetMaterialItem(_uniqueId);
+		return MaterialInfos.GetMaterialInfo(_uniqueId);
 	}
 
 }

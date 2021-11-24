@@ -41,18 +41,18 @@ public class MaterialGroupIcons {
 		_materialGroupIcons = new HashMap<Integer, MaterialGroupIcon>();
 		_positions = new HashMap<Integer, MaterialGroupIcon>();
 
-		AddIcon(UniqueIds.CommonMat, 0, "Common Materials", "Materialnumber", ChatColor.GRAY);
-		AddIcon(UniqueIds.UnCommonMat, 1, "Uncommon Materials", "Materialnumber", ChatColor.GREEN);
-		AddIcon(UniqueIds.RareMat, 2, "Rare Materials", "Materialnumber", ChatColor.AQUA);
-		AddIcon(UniqueIds.EpicMat, 3, "Epic Materials", "Materialnumber", ChatColor.LIGHT_PURPLE);
+		AddIcon(UniqueIds.CommonMat, 0, "Common Materials", "Materialnumber", ChatColor.GRAY, 1);
+		AddIcon(UniqueIds.UnCommonMat, 1, "Uncommon Materials", "Materialnumber", ChatColor.GREEN, 2);
+		AddIcon(UniqueIds.RareMat, 2, "Rare Materials", "Materialnumber", ChatColor.AQUA, 3);
+		AddIcon(UniqueIds.EpicMat, 3, "Epic Materials", "Materialnumber", ChatColor.LIGHT_PURPLE, 4);
 
 	}
 
-	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName, ChatColor chatColor) throws Exception {
+	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName, ChatColor chatColor, int priority) throws Exception {
 
 		// Backward Pointer
 		int[] materialIconIds = MaterialIcons.FindMaterialGroupIcons(materialInfoId);
-		MaterialGroupIcon materialGroupIcon = new MaterialGroupIcon(materialInfoId, position, displayName, dbAccessName, materialIconIds, chatColor);
+		MaterialGroupIcon materialGroupIcon = new MaterialGroupIcon(materialInfoId, position, displayName, dbAccessName, materialIconIds, chatColor, priority);
 		_materialGroupIcons.put(materialInfoId, materialGroupIcon);
 
 		if (!_positions.containsKey(position))
@@ -74,7 +74,7 @@ public class MaterialGroupIcons {
 
 			int uniqueId = materialGroupIcon.GetUniqueId();
 
-			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+			MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
 
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
@@ -108,7 +108,7 @@ public class MaterialGroupIcons {
 
 			MaterialIcon materialIcon = MaterialIcons.GetMaterialIconFromId(materialIconIds[i]);
 			int uniqueId = materialIcon.GetUniqueId();
-			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(materialIcon.GetUniqueId());
+			MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(materialIcon.GetUniqueId());
 
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 

@@ -14,5 +14,14 @@ commands:
     
   rai:
     aliases: [ra]
-    description: Remove All Items
+    description: Remove All Items (only Debug)
+    
+  fill:
+    aliases: [fi]
+    description: Fill Items (only Debug)
+    
+  add:
+    aliases: [ad]
+    description: Add Items (only Debug)
+    
     

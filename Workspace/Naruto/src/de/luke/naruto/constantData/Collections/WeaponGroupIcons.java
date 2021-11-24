@@ -38,19 +38,19 @@ public class WeaponGroupIcons {
 
 		_weaponGroupIcons = new HashMap<Integer, WeaponGroupIcon>();
 		_positions = new HashMap<Integer, WeaponGroupIcon>();
-		AddIcon(UniqueIds.CommonWeap, 4, "Common Weapons", "Materialnumber", ChatColor.WHITE);
-		AddIcon(UniqueIds.UnCommonWeap, 5, "Uncommon Weapons", "Materialnumber", ChatColor.DARK_GREEN);
-		AddIcon(UniqueIds.RareWeap, 6, "Rare Weapons", "Materialnumber", ChatColor.BLUE);
-		AddIcon(UniqueIds.LegendWeap, 7, "Legendary Weapon", "Materialnumber", ChatColor.YELLOW);
-		AddIcon(UniqueIds.ExclusiveWeap, 8, "Exclusive Weapons", "Materialnumber", ChatColor.RED);
+		AddIcon(UniqueIds.CommonWeap, 4, "Common Weapons", "Materialnumber", ChatColor.WHITE, 1);
+		AddIcon(UniqueIds.UnCommonWeap, 5, "Uncommon Weapons", "Materialnumber", ChatColor.DARK_GREEN, 2);
+		AddIcon(UniqueIds.RareWeap, 6, "Rare Weapons", "Materialnumber", ChatColor.BLUE, 3);
+		AddIcon(UniqueIds.LegendWeap, 7, "Legendary Weapon", "Materialnumber", ChatColor.YELLOW, 4);
+		AddIcon(UniqueIds.ExclusiveWeap, 8, "Exclusive Weapons", "Materialnumber", ChatColor.RED, 5);
 
 	}
 
-	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName, ChatColor chatColor) throws Exception {
+	private static void AddIcon(int materialInfoId, int position, String displayName, String dbAccessName, ChatColor chatColor, int priority) throws Exception {
 
 		// Backward Pointer
 		int[] weaponIconIds = WeaponIcons.FindMaterialGroupIcons(materialInfoId);
-		WeaponGroupIcon weaponGroupIcon = new WeaponGroupIcon(materialInfoId, position, displayName, dbAccessName, weaponIconIds, chatColor);
+		WeaponGroupIcon weaponGroupIcon = new WeaponGroupIcon(materialInfoId, position, displayName, dbAccessName, weaponIconIds, chatColor, priority);
 		_weaponGroupIcons.put(materialInfoId, weaponGroupIcon);
 
 		if (!_positions.containsKey(position))
@@ -72,7 +72,7 @@ public class WeaponGroupIcons {
 
 			int uniqueId = weaponGroupIcon.GetUniqueId();
 
-			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(uniqueId);
+			MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(uniqueId);
 
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
@@ -103,7 +103,7 @@ public class WeaponGroupIcons {
 
 			WeaponIcon weaponIcon = WeaponIcons.GetWeaponIconFromId(weaponIconIds[i]);
 			int uniqueId = weaponIcon.GetUniqueId();
-			MaterialInfo materialInfo = MaterialInfos.GetMaterialItem(weaponIcon.GetUniqueId());
+			MaterialInfo materialInfo = MaterialInfos.GetMaterialInfo(weaponIcon.GetUniqueId());
 
 			ItemStack itemStack = new MaterialData(materialInfo.GetMaterial(), materialInfo.GetbyteValue()).toItemStack(1);
 
@@ -114,8 +114,7 @@ public class WeaponGroupIcons {
 			lore.add("§7§lClick to open the menu!");
 			itemMeta.setLore(lore);
 			itemStack.setItemMeta(itemMeta);
-			
-			
+
 			// Important!!! Metadata only in the return value
 			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.TypeMetaData, TypeIds.Weapon);
 			itemStack = ItemMetadata.setMetadata(itemStack, MetaDataIds.UniqueIdMetaData, uniqueId);
